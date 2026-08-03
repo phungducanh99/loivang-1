@@ -1,0 +1,2185 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Tương Tác 100 Câu: Lời Vàng Của Thầy Tôi - Phần Hai</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #0d0404 0%, #1c0c0c 100%);
+            --card-bg: rgba(35, 15, 15, 0.7);
+            --border-color: rgba(212, 175, 55, 0.25);
+            --gold-accent: #d4af37;
+            --text-main: #f7f1e5;
+            --text-sub: #c7bba8;
+            --correct: #2e7d32;
+            --incorrect: #a61c1c;
+            --font-title: 'Playfair Display', serif;
+            --font-body: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-body);
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 800px;
+            padding: 20px;
+            box-sizing: border-box;
+            margin: 40px auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-family: var(--font-title);
+            color: var(--gold-accent);
+            margin-bottom: 15px;
+            font-size: 2.2rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+            letter-spacing: 1px;
+        }
+
+        .progress-bar {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.1rem;
+            color: var(--text-sub);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+            font-family: var(--font-title);
+            letter-spacing: 1px;
+        }
+
+        .question-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+            position: relative;
+        }
+
+        .level-badge {
+            position: absolute;
+            top: -14px;
+            right: 30px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            backdrop-filter: blur(4px);
+            border: 1px solid;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .level-easy {
+            background: rgba(76, 175, 80, 0.2);
+            border-color: rgba(76, 175, 80, 0.5);
+            color: #81C784;
+        }
+
+        .level-medium {
+            background: rgba(255, 152, 0, 0.2);
+            border-color: rgba(255, 152, 0, 0.5);
+            color: #FFB74D;
+        }
+
+        .level-hard {
+            background: rgba(244, 67, 54, 0.2);
+            border-color: rgba(244, 67, 54, 0.5);
+            color: #E57373;
+        }
+
+        .question-title {
+            font-family: var(--font-title);
+            font-size: 1.6rem;
+            margin-top: 10px;
+            margin-bottom: 30px;
+            line-height: 1.5;
+            color: var(--text-main);
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .option-btn {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 16px 24px;
+            border-radius: 10px;
+            font-family: var(--font-body);
+            font-size: 1.1rem;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            line-height: 1.4;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background: rgba(212, 175, 55, 0.15);
+            border-color: var(--gold-accent);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .option-btn:focus-visible {
+            outline: 2px solid var(--gold-accent);
+            outline-offset: 2px;
+        }
+
+        .option-btn:disabled {
+            cursor: default;
+            opacity: 0.7;
+        }
+
+        .option-btn.correct {
+            background: rgba(46, 125, 50, 0.4);
+            border-color: var(--correct);
+            box-shadow: 0 0 15px rgba(46, 125, 50, 0.4);
+            color: #ffffff;
+        }
+
+        .option-btn.incorrect {
+            background: rgba(166, 28, 28, 0.4);
+            border-color: var(--incorrect);
+            box-shadow: 0 0 15px rgba(166, 28, 28, 0.4);
+            color: #ffffff;
+        }
+
+        .explanation {
+            margin-top: 30px;
+            padding: 20px 25px;
+            background: rgba(0, 0, 0, 0.5);
+            border-left: 4px solid var(--gold-accent);
+            border-radius: 0 10px 10px 0;
+            color: var(--text-sub);
+            line-height: 1.6;
+            font-size: 1.05rem;
+            overflow: hidden;
+            animation: slideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .map-toggle-btn {
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid var(--border-color);
+            color: var(--gold-accent);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .map-toggle-btn:hover {
+            background: rgba(212, 175, 55, 0.25);
+            border-color: var(--gold-accent);
+            box-shadow: 0 0 12px rgba(212, 175, 55, 0.3);
+            transform: translateY(-1px);
+        }
+
+        /* Modal Overlay */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: rgba(28, 12, 12, 0.95);
+            border: 1px solid var(--gold-accent);
+            box-shadow: 0 0 35px rgba(212, 175, 55, 0.3);
+            border-radius: 16px;
+            padding: 30px;
+            max-width: 480px;
+            width: 90%;
+            text-align: center;
+            color: var(--text-main);
+            position: relative;
+        }
+
+        .modal-title {
+            font-family: var(--font-title);
+            color: var(--gold-accent);
+            font-size: 1.4rem;
+            margin-top: 0;
+            margin-bottom: 15px;
+            letter-spacing: 0.5px;
+        }
+
+        .modal-text {
+            color: var(--text-sub);
+            font-size: 1.05rem;
+            line-height: 1.5;
+            margin-bottom: 25px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .modal-btn {
+            padding: 10px 24px;
+            border-radius: 20px;
+            font-family: var(--font-title);
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+        }
+
+        .modal-btn-primary {
+            background: var(--gold-accent);
+            color: #1a0808;
+            border: 1px solid var(--gold-accent);
+        }
+
+        .modal-btn-primary:hover {
+            background: #e5be3b;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+            transform: translateY(-1px);
+        }
+
+        .modal-btn-secondary {
+            background: transparent;
+            color: var(--text-sub);
+            border: 1px solid var(--border-color);
+        }
+
+        .modal-btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-main);
+            border-color: var(--text-sub);
+        }
+
+        /* Quiz Map Modal Specifics */
+        .quiz-map-content {
+            max-width: 720px;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            padding: 25px;
+            text-align: left;
+        }
+
+        .quiz-map-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px;
+            margin-bottom: 15px;
+        }
+
+        .quiz-map-header .modal-title {
+            margin: 0;
+        }
+
+        .close-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-sub);
+            font-size: 1.8rem;
+            cursor: pointer;
+            line-height: 1;
+            transition: color 0.2s ease;
+        }
+
+        .close-btn:hover {
+            color: var(--gold-accent);
+        }
+
+        .quiz-map-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            font-size: 0.85rem;
+            color: var(--text-sub);
+            margin-bottom: 15px;
+            padding: 8px 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .dot.unanswered {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .dot.correct {
+            background: #10b981;
+            box-shadow: 0 0 6px rgba(16, 185, 129, 0.6);
+        }
+
+        .dot.incorrect {
+            background: #e11d48;
+            box-shadow: 0 0 6px rgba(225, 29, 72, 0.6);
+        }
+
+        .dot.current {
+            background: transparent;
+            border: 2px solid var(--gold-accent);
+            box-shadow: 0 0 6px var(--gold-accent);
+        }
+
+        .quiz-map-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(48px, 1fr));
+            gap: 8px;
+            overflow-y: auto;
+            max-height: 55vh;
+            padding-right: 5px;
+        }
+
+        .quiz-map-grid::-webkit-scrollbar {
+            width: 6px;
+        }
+        .quiz-map-grid::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 3px;
+        }
+        .quiz-map-grid::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 3px;
+        }
+
+        .grid-item {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: var(--font-body);
+        }
+
+        .grid-item.unanswered {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-sub);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .grid-item.unanswered:hover {
+            background: rgba(212, 175, 55, 0.15);
+            border-color: var(--gold-accent);
+            color: var(--text-main);
+            transform: scale(1.08);
+        }
+
+        .grid-item.correct {
+            background: rgba(16, 185, 129, 0.2);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.5);
+            box-shadow: 0 0 8px rgba(16, 185, 129, 0.2);
+        }
+
+        .grid-item.correct:hover {
+            background: rgba(16, 185, 129, 0.35);
+            transform: scale(1.08);
+        }
+
+        .grid-item.incorrect {
+            background: rgba(225, 29, 72, 0.2);
+            color: #f87171;
+            border: 1px solid rgba(225, 29, 72, 0.5);
+            box-shadow: 0 0 8px rgba(225, 29, 72, 0.2);
+        }
+
+        .grid-item.incorrect:hover {
+            background: rgba(225, 29, 72, 0.35);
+            transform: scale(1.08);
+        }
+
+        .grid-item.current {
+            border: 2px solid var(--gold-accent) !important;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.6) !important;
+            font-weight: 700;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                max-height: 0;
+                transform: translateY(-10px);
+                padding-top: 0;
+                padding-bottom: 0;
+            }
+            to {
+                opacity: 1;
+                max-height: 500px;
+                transform: translateY(0);
+                padding-top: 20px;
+                padding-bottom: 20px;
+            }
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .nav-btn {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-family: var(--font-title);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            background: rgba(212, 175, 55, 0.15);
+            border-color: var(--gold-accent);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
+            color: var(--gold-accent);
+        }
+
+        .nav-btn:focus-visible {
+            outline: 2px solid var(--gold-accent);
+            outline-offset: 2px;
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        /* Result Screen */
+        .result-screen {
+            text-align: center;
+            padding: 40px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .result-title {
+            font-family: var(--font-title);
+            color: var(--gold-accent);
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+        }
+
+        .chart-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 30px;
+        }
+
+        .donut-chart {
+            transform: rotate(-90deg);
+            width: 100%;
+            height: 100%;
+        }
+
+        .donut-bg {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.1);
+            stroke-width: 12;
+        }
+
+        .donut-progress {
+            fill: none;
+            stroke: var(--gold-accent);
+            stroke-width: 12;
+            stroke-linecap: round;
+            stroke-dasharray: 502.65; /* 2 * PI * r = 2 * 3.14159 * 80 ~ 502.65 */
+            stroke-dashoffset: 502.65;
+            transition: stroke-dashoffset 1.5s ease-out;
+        }
+
+        .chart-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: var(--font-title);
+            font-size: 2rem;
+            color: var(--text-main);
+            font-weight: bold;
+        }
+
+        .result-badge {
+            font-size: 1.5rem;
+            color: var(--text-main);
+            margin-bottom: 15px;
+            font-family: var(--font-title);
+        }
+
+        .result-message {
+            font-size: 1.1rem;
+            color: var(--text-sub);
+            margin-bottom: 40px;
+            line-height: 1.6;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .result-actions {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-family: var(--font-title);
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .btn-primary {
+            background: var(--gold-accent);
+            color: #1a0808;
+            border: 1px solid var(--gold-accent);
+        }
+
+        .btn-primary:hover {
+            background: #e5be3b;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: rgba(0, 0, 0, 0.5);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(212, 175, 55, 0.15);
+            border-color: var(--gold-accent);
+            transform: translateY(-2px);
+        }
+
+        /* Review Banner */
+        .review-banner {
+            background: rgba(212, 175, 55, 0.15);
+            border: 1px solid var(--gold-accent);
+            color: var(--text-main);
+            padding: 10px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 500;
+        }
+        
+        .review-banner button {
+            background: var(--gold-accent);
+            color: #1a0808;
+            border: none;
+            padding: 5px 15px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s ease;
+        }
+        
+        .review-banner button:hover {
+            background: #e5be3b;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
+        }
+
+        /* Timer styles */
+        .timer-container {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 3px;
+            margin-top: 15px;
+            overflow: hidden;
+            border: 1px solid rgba(212, 175, 55, 0.1);
+        }
+
+        .timer-bar {
+            height: 100%;
+            width: 100%;
+            background: linear-gradient(90deg, var(--gold-accent), var(--incorrect));
+            transition: width 0.1s linear, background-color 0.3s ease;
+            border-radius: 3px;
+        }
+
+        .timer-display {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-family: var(--font-title);
+            font-size: 1.05rem;
+            color: var(--gold-accent);
+            text-shadow: 0 0 5px rgba(212, 175, 55, 0.3);
+        }
+
+        /* Timeout Overlay styles */
+        .options-container {
+            position: relative;
+            width: 100%;
+        }
+
+        .timeout-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(35, 10, 10, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            border: 1px dashed var(--gold-accent);
+            box-shadow: 0 0 25px rgba(166, 28, 28, 0.3);
+            animation: fadeIn 0.4s ease;
+            box-sizing: border-box;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .timeout-title {
+            font-family: var(--font-title);
+            color: var(--incorrect);
+            font-size: 1.4rem;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px rgba(166, 28, 28, 0.6);
+        }
+
+        .timeout-subtitle {
+            color: var(--text-sub);
+            font-size: 1rem;
+            font-family: var(--font-body);
+        }
+
+        @media (max-width: 600px) {
+            .app-container {
+                margin: 20px auto;
+                padding: 15px;
+            }
+            .header h1 {
+                font-size: 1.7rem;
+            }
+            .question-title {
+                font-size: 1.3rem;
+                margin-bottom: 20px;
+            }
+            .question-card {
+                padding: 25px 20px;
+            }
+            .option-btn {
+                font-size: 1rem;
+                padding: 14px 18px;
+            }
+            .level-badge {
+                right: 20px;
+            }
+            .nav-btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+            .progress-bar {
+                flex-wrap: wrap;
+                gap: 10px;
+                justify-content: center;
+            }
+            .quiz-map-grid {
+                grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Cấu trúc HTML chính -->
+    </div>
+
+    <!-- Modal Auto-Save / Resume -->
+    <div id="resume-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <h3 class="modal-title">Khôi Phục Tiến Trình</h3>
+            <p class="modal-text">Bạn có muốn tiếp tục làm bài trắc nghiệm từ câu hỏi trước đó không?</p>
+            <div class="modal-actions">
+                <button class="modal-btn modal-btn-primary" onclick="confirmResume(true)">Đồng ý</button>
+                <button class="modal-btn modal-btn-secondary" onclick="confirmResume(false)">Làm lại từ đầu</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Quiz Map -->
+    <div id="quiz-map-modal" class="modal-overlay" style="display: none;" onclick="closeQuizMapOnBackdrop(event)">
+        <div class="modal-content quiz-map-content">
+            <div class="quiz-map-header">
+                <h3 class="modal-title">🗺️ Bản Đồ Câu Hỏi (100 Câu)</h3>
+                <button class="close-btn" onclick="closeQuizMap()">&times;</button>
+            </div>
+            <div class="quiz-map-legend">
+                <span class="legend-item"><span class="dot unanswered"></span> Chưa trả lời</span>
+                <span class="legend-item"><span class="dot correct"></span> Trả lời đúng</span>
+                <span class="legend-item"><span class="dot incorrect"></span> Trả lời sai</span>
+                <span class="legend-item"><span class="dot current"></span> Câu hiện tại</span>
+            </div>
+            <div id="quiz-map-grid" class="quiz-map-grid">
+                <!-- Thẻ grid item được render bằng Javascript -->
+            </div>
+        </div>
+    </div>
+    <script>
+const quizData = [
+    // 1 - 30: RẤT DỄ & DỄ (Cơ bản về Phần 2, Quy y, Bồ Đề Tâm)
+    {
+        level: "easy",
+        question: "1. Tác phẩm 'Lời Vàng Của Thầy Tôi' do Đại sư nào biên soạn?",
+        options: ["Patrul Rinpoche", "Atisa", "Milarepa", "Longchenpa"],
+        correct: 0,
+        explanation: "Tác phẩm do Ngài Patrul Rinpoche biên soạn nhằm ghi chép trung thực giáo huấn khẩu truyền của Bổn Sư."
+    },
+    {
+        level: "easy",
+        question: "2. Phần Hai của tác phẩm có tiêu đề chính thức là gì?",
+        options: [
+            "Những pháp tu dự bị thông thường",
+            "Những pháp tu dự bị phi thường hay những chuẩn bị bên trong",
+            "Con đường chuyển di thần tốc",
+            "Luật nhân quả và nghiệp báo"
+        ],
+        correct: 1,
+        explanation: "Phần Hai có tiêu đề chính thức là 'Những pháp tu dự bị phi thường hay những chuẩn bị bên trong'."
+    },
+    {
+        level: "easy",
+        question: "3. Chương 1 của Phần Hai xác định pháp tu nào là 'Nền tảng của mọi con đường'?",
+        options: ["Bồ Đề Tâm", "Cúng Dường Mạn Đà La", "Quy Y", "Bổn Sư Du Già"],
+        correct: 2,
+        explanation: "Chương Một của Phần Hai khẳng định 'Quy Y, nền tảng của mọi con đường'."
+    },
+    {
+        level: "easy",
+        question: "4. Tam Bảo truyền thống trong Phật giáo bao gồm những đối tượng nào?",
+        options: ["Thầy, Bổn Tôn, Không Hành Nữ", "Phật, Pháp, Tăng", "Thân, Khẩu, Ý", "Từ, Bi, Hỷ"],
+        correct: 1,
+        explanation: "Tam Bảo gồm Phật (Thầy chỉ đường), Pháp (Con đường) và Tăng (Bạn đồng hành)."
+    },
+    {
+        level: "easy",
+        question: "5. Có mấy loại tín tâm chính khi đến với Quy Y trong Chương 1?",
+        options: ["2 loại", "3 loại", "4 loại", "5 loại"],
+        correct: 1,
+        explanation: "Có 3 loại tín tâm: Niềm tin sống động, Niềm tin tha thiết và Niềm tin kiên định."
+    },
+    {
+        level: "easy",
+        question: "6. Nguyện lực Quy Y của bậc Hạ Căn có mục đích gì?",
+        options: [
+            "Sợ khổ đau 3 cõi thấp, mong đạt hạnh phúc cõi Trời và Người",
+            "Mong đạt Niết Bàn giải thoát cá nhân",
+            "An lập toàn thể chúng sinh vào Phật Quả viên mãn",
+            "Cầu tài lộc danh tiếng đời này"
+        ],
+        correct: 0,
+        explanation: "Hạ căn quy y vì sợ khổ đau 3 cõi thấp và mong đạt hạnh phúc cõi Trời, Người."
+    },
+    {
+        level: "easy",
+        question: "7. Nguyện lực Quy Y của các bậc Thượng Căn có mục đích chính là gì?",
+        options: [
+            "Tránh xa bệnh tật đời này",
+            "Đạt Niết Bàn cho riêng mình",
+            "An lập toàn thể chúng sinh vào Phật Quả viên mãn",
+            "Thâu đoạt tài sản thế gian"
+        ],
+        correct: 2,
+        explanation: "Thượng căn quy y với chí nguyện an lập tất cả chúng sinh trong Phật Quả toàn giác."
+    },
+    {
+        level: "easy",
+        question: "8. Sau khi đã Quy Y Phật, điều bắt buộc hành giả phải từ bỏ là gì?",
+        options: [
+            "Tìm kiếm sự quy y nơi các thần thánh thế gian khác",
+            "Ăn chay",
+            "Đọc sách báo",
+            "Đi du lịch"
+        ],
+        correct: 0,
+        explanation: "Đã quy y Phật thì không tìm kiếm sự quy y nơi bất kỳ thần thánh nào khác."
+    },
+    {
+        level: "easy",
+        question: "9. Sau khi đã Quy Y Pháp, hành giả tuyệt đối không nên làm gì?",
+        options: ["Tổn hại chúng sinh", "Làm việc kiếm sống", "Học tập kiến thức", "Nói chuyện"],
+        correct: 0,
+        explanation: "Đã quy y Thánh Pháp thì không làm tổn hại chúng sinh."
+    },
+    {
+        level: "easy",
+        question: "10. Sau khi đã Quy Y Tăng, hành giả không nên kết giao thân thiết với ai?",
+        options: ["Người ngoại đạo hoặc người xem thường Tam Bảo", "Người nghèo", "Người bệnh", "Người già"],
+        correct: 0,
+        explanation: "Đã quy y Tăng thì không kết giao thân mật với người ngoại đạo hay người gièm pha Tam Bảo."
+    },
+    {
+        level: "easy",
+        question: "11. Chương 2 của Phần Hai gọi Bồ Đề Tâm là gì trong Đại Thừa?",
+        options: ["Ngọn cây", "Gốc rễ của Đại Thừa", "Cành lá", "Vỏ cây"],
+        correct: 1,
+        explanation: "Chương 2 khẳng định Bồ Đề Tâm là gốc rễ của con đường Đại Thừa."
+    },
+    {
+        level: "easy",
+        question: "12. Tứ Vô Lượng Tâm bao gồm 4 phẩm hạnh nào?",
+        options: ["Từ, Bi, Hỷ, Xả", "Sanh, Lão, Bệnh, Tử", "Thường, Lạc, Ngã, Tịnh", "Giới, Định, Tuệ, Giải Thoát"],
+        correct: 0,
+        explanation: "Tứ vô lượng tâm bao gồm: Từ, Bi, Hỷ và Xả."
+    },
+    {
+        level: "easy",
+        question: "13. Khi thực hành Tứ Vô Lượng Tâm, nên bắt đầu bằng tâm nào trước để tránh thiên lệch?",
+        options: ["Tâm Từ", "Tâm Bi", "Tâm Hỷ", "Tâm Xả"],
+        correct: 3,
+        explanation: "Nên bắt đầu bằng Tâm Xả (bình đẳng) để tránh lòng từ bi bị dính mắc thiên lệch."
+    },
+    {
+        level: "easy",
+        question: "14. 'Sự dũng cảm của vị Vua' trong Bồ Đề Tâm có ý nghĩa gì?",
+        options: [
+            "Mong bản thân đạt Phật quả trước rồi dẫn dắt chúng sinh",
+            "Cùng đạt Phật quả với chúng sinh",
+            "Đưa chúng sinh thành Phật trước rồi mình mới thành",
+            "Dùng sức mạnh uy quyền"
+        ],
+        correct: 0,
+        explanation: "Thành Phật trước rồi dẫn dắt chúng sinh giống như vị vua đăng cơ trước rồi cai trị."
+    },
+    {
+        level: "easy",
+        question: "15. 'Sự dũng cảm của người chăn cừu' có đặc điểm gì?",
+        options: [
+            "Giải thoát trước",
+            "Giải thoát cùng lúc",
+            "Nguyện đưa tất cả chúng sinh thành Phật trước rồi mình mới thành Phật",
+            "Tránh xa nguy hiểm"
+        ],
+        correct: 2,
+        explanation: "Người chăn cừu đi sau đàn cừu, nguyện đưa tất cả chúng sinh thành Phật trước."
+    },
+    {
+        level: "easy",
+        question: "16. Bồ Đề Tâm Tương Đối chia làm 2 loại nào?",
+        options: [
+            "Tác ý (Nguyện) và Thực hành (Hạnh)",
+            "Chân thật và Giả tạm",
+            "Lớn và Nhỏ",
+            "Sơ cấp và Cao cấp"
+        ],
+        correct: 0,
+        explanation: "Gồm Bồ Đề Tâm Nguyện (Tác ý) và Bồ Đề Tâm Hạnh (Thực hành)."
+    },
+    {
+        level: "easy",
+        question: "17. Lục Độ Ba La Mật thuộc về khía cạnh nào của Bồ Đề Tâm?",
+        options: ["Bồ Đề Tâm Nguyện", "Bồ Đề Tâm Hạnh", "Tâm Xả", "Tâm Hỷ"],
+        correct: 1,
+        explanation: "Sáu pháp toàn thiện (Lục độ) là nội dung thực hành của Bồ Đề Tâm Hạnh."
+    },
+    {
+        level: "easy",
+        question: "18. Đức Bổn Tôn trong Chương 3 dùng để tịnh hóa nghiệp chướng là vị nào?",
+        options: ["Đức Quán Thế Âm", "Đức Kim Cang Tát Đỏa (Vajrasattva)", "Đức Văn Thù", "Đức Di Lặc"],
+        correct: 1,
+        explanation: "Chương 3 hướng dẫn thiền quán và trì tụng Đức Kim Cang Tát Đỏa."
+    },
+    {
+        level: "easy",
+        question: "19. Bốn lực tịnh hóa nghiệp gồm: Lực hỗ trợ, Lực ân hận, Lực quyết chí chuyển tâm và lực gì?",
+        options: ["Lực cầu nguyện", "Lực quyết chí hành thiện hạnh", "Lực nhẫn nại", "Lực hoan hỷ"],
+        correct: 1,
+        explanation: "Tứ lực tịnh hóa gồm: Hỗ trợ, Ân hận, Quyết chí chuyển tâm, Quyết chí hành thiện hạnh."
+    },
+    {
+        level: "easy",
+        question: "20. Cúng dường Mạn-đà-la trong Chương 4 nhằm mục đích chính là gì?",
+        options: [
+            "Để cầu xin tài bảo đời này",
+            "Vun bồi hai bồ công đức (Phước đức và Trí tuệ)",
+            "Khoe khoang của cải",
+            "Xua đuổi bệnh tật"
+        ],
+        correct: 1,
+        explanation: "Nhằm tích lũy và vun bồi hai bồ công đức: Phước đức và Trí tuệ."
+    },
+    {
+        level: "easy",
+        question: "21. Pháp tu Kusali (Chöd) trong Chương 5 dùng phẩm vật gì chính để cúng dường?",
+        options: ["Vàng bạc", "Hoa quả", "Thân thể của chính hành giả", "Trà và bột lúa mạch"],
+        correct: 2,
+        explanation: "Pháp Kusali dùng chính thân thể hành giả làm phẩm vật cúng dường."
+    },
+    {
+        level: "easy",
+        question: "22. Tiêu đề Chương 5 gọi pháp Kusali diệt trừ bốn ma vương bằng phương cách nào?",
+        options: ["Bằng một độc chiêu", "Bằng binh khí", "Bằng trì chú", "Bằng tiền tài"],
+        correct: 0,
+        explanation: "Tiêu đề ghi: 'Kusali - Pháp tích tụ công đức: Diệt trừ bốn ma vương bằng một độc chiêu'."
+    },
+    {
+        level: "easy",
+        question: "23. Phương pháp tối hậu để chứng ngộ tuệ giác trong Chương 6 là gì?",
+        options: ["Thiền Định", "Bổn Sư Du Già (Guru Yoga)", "Tế lễ", "Khổ hạnh"],
+        correct: 1,
+        explanation: "Chương 6 khẳng định Bổn Sư Du Già là phương pháp tối hậu để chứng ngộ tuệ giác."
+    },
+    {
+        level: "easy",
+        question: "24. Trong Bổn Sư Du Già, vị Bổn Sư (Thầy) được nhìn nhận như thế nào?",
+        options: [
+            "Người bạn thông thường",
+            "Hiện thân trí tuệ từ bi của tất cả chư Phật",
+            "Nhà triết học",
+            "Vị vua thế gian"
+        ],
+        correct: 1,
+        explanation: "Thầy được quán tưởng là hiện thân hợp nhất trí tuệ và từ bi của chư Phật."
+    },
+    {
+        level: "easy",
+        question: "25. Chuỗi bài tập Cúng Dường Thất Chi trong Bổn Sư Du Già bắt đầu bằng chi nào?",
+        options: ["Cúng dường", "Lễ lạy", "Sám hối", "Tùy hỷ"],
+        correct: 1,
+        explanation: "Thất chi Phổ Hiền bắt đầu bằng Chi Lễ Lạy."
+    },
+    {
+        level: "easy",
+        question: "26. Khi thực hiện lễ lạy, việc đặt hai bàn tay chắp lên trán tượng trưng tịnh hóa chướng ngại của:",
+        options: ["Thân", "Khẩu", "Ý", "Nghiệp"],
+        correct: 0,
+        explanation: "Đặt tay lên trán tịnh hóa chướng ngại thuộc về Thân."
+    },
+    {
+        level: "easy",
+        question: "27. Đặt hai bàn tay chắp lên cổ họng khi lễ lạy tịnh hóa chướng ngại của:",
+        options: ["Thân", "Khẩu (Ngữ)", "Ý", "Tâm"],
+        correct: 1,
+        explanation: "Đặt tay lên cổ họng tịnh hóa các chướng ngại thuộc về Khẩu."
+    },
+    {
+        level: "easy",
+        question: "28. Đặt hai bàn tay chắp lên ngực (tim) khi lễ lạy tịnh hóa chướng ngại của:",
+        options: ["Thân", "Khẩu", "Ý (Tâm)", "Mắt"],
+        correct: 2,
+        explanation: "Đặt tay lên tim tịnh hóa các chướng ngại thuộc về Ý."
+    },
+    {
+        level: "easy",
+        question: "29. Lễ lạy chạm 5 điểm trên thân thể xuống đất gọi là gì?",
+        options: ["Ngũ thể đầu địa", "Tam thể đầu địa", "Thất chi lễ lạy", "Đại lễ lạy"],
+        correct: 0,
+        explanation: "Gồm Trán, 2 bàn tay, 2 đầu gối chạm đất gọi là Ngũ thể đầu địa."
+    },
+    {
+        level: "easy",
+        question: "30. Hồi hướng công đức ở cuối mỗi thời khóa tu tập có tác dụng gì?",
+        options: [
+            "Giúp công đức không bị mất đi hay cạn kiệt mà phát triển đến Phật Quả",
+            "Để xua đuổi muỗi",
+            "Đạt sự nổi tiếng",
+            "Không có tác dụng"
+        ],
+        correct: 0,
+        explanation: "Hồi hướng giúp bảo vệ công đức và nhân rộng nó cho đến khi đạt Giác ngộ."
+    },
+
+    // 31 - 70: TRUNG BÌNH (Nghi thức, quán tưởng, ẩm dụ)
+    {
+        level: "medium",
+        question: "31. Trong quán tưởng Ruộng Công Đức Quy Y, Cây Như Ý có mấy nhánh lớn?",
+        options: ["3 nhánh", "4 nhánh", "5 nhánh", "7 nhánh"],
+        correct: 2,
+        explanation: "Cây Như Ý có 5 nhánh lớn tỏa ra ngợp bầu trời đại diện cho các đối tượng quy y."
+    },
+    {
+        level: "medium",
+        question: "32. Ở cành trung tâm Cây Như Ý trong Ruộng Công Đức Quy Y ngự vị nào?",
+        options: ["Đức Phật Thích Ca", "Bổn Sư Nguyên Sơ / Đức Liên Hoa Sanh", "Đức Kim Cang Tát Đỏa", "Đức Di Lặc"],
+        correct: 1,
+        explanation: "Trung tâm là Bổn Sư (hoặc Đức Liên Hoa Sanh) hợp nhất chư Phật."
+    },
+    {
+        level: "medium",
+        question: "33. Khi quán tưởng Quy Y, nhóm đối tượng nào được đặt ở hàng đầu tiên trước mặt hành giả?",
+        options: ["Cha mẹ", "Tất cả kẻ thù ghét và gây chướng ngại cho ta", "Các vị Thầy", "Huynh đệ"],
+        correct: 1,
+        explanation: "Hàng thứ nhất phía trước là những kẻ thù ghét và làm tổn thương hành giả."
+    },
+    {
+        level: "medium",
+        question: "34. Tại sao kẻ thù lại được đặt ở hàng đầu tiên trong phép quán tưởng Quy Y?",
+        options: [
+            "Vì họ mạnh hơn",
+            "Vì họ tạo cơ hội tuyệt vời để rèn luyện Hạnh Nhẫn Nại và tịnh hóa nghiệp",
+            "Để trừng phạt họ",
+            "Theo thứ tự ngẫu nhiên"
+        ],
+        correct: 1,
+        explanation: "Kẻ thù giúp hành giả thực hành nhẫn nại và cắt đứt sự bám chấp."
+    },
+    {
+        level: "medium",
+        question: "35. Khi sám hối Kim Cang Tát Đỏa, dòng cam lồ chảy xuống từ thân Ngài có màu gì?",
+        options: ["Màu đỏ", "Màu vàng", "Màu trắng sáng chói", "Màu xanh"],
+        correct: 2,
+        explanation: "Dòng cam lồ trắng sáng như sữa/ngọc chảy qua đỉnh đầu tịnh hóa hành giả."
+    },
+    {
+        level: "medium",
+        question: "36. Trì tụng Chú Bách Tự Minh không sao lắng bao nhiêu lần sẽ tịnh hóa mọi vi phạm mật nguyện?",
+        options: ["21 lần", "108 lần", "1,000 lần", "10,000 lần"],
+        correct: 1,
+        explanation: "Trì tụng 108 lần chú Bách Tự Minh tịnh hóa mọi ác hạnh và vi phạm."
+    },
+    {
+        level: "medium",
+        question: "37. Vũ trụ quán tưởng trong Mạn-đà-la Hóa Thân có trung tâm là gì?",
+        options: ["Bốn trung châu", "Núi Tu Di", "Cõi Trời", "Đại dương"],
+        correct: 1,
+        explanation: "Trung tâm Mạn-đà-la Hóa Thân là Núi Tu Di bao quanh bởi 4 đại châu."
+    },
+    {
+        level: "medium",
+        question: "38. Hành động lau chùi đế Mạn-đà-la biểu thị cho điều gì?",
+        options: [
+            "Làm sạch bụi bẩn",
+            "Tịnh hóa những ô nhiễm che chướng trong tâm thức",
+            "Thể hiện sự siêng năng",
+            "Thói quen hình thức"
+        ],
+        correct: 1,
+        explanation: "Lau chùi đế Mạn-đà-la tượng trưng cho việc làm sạch ô nhiễm che chướng trong tâm."
+    },
+    {
+        level: "medium",
+        question: "39. Mạn-đà-la Đặc Biệt của Pháp Thân cúng dường yếu tố nào?",
+        options: [
+            "Núi Tu Di và Bốn Châu",
+            "Các cõi Trời Báo Thân",
+            "Chân tánh Như Thị vốn thanh tịnh, vô tạo tác của Tâm",
+            "Vàng bạc châu báu"
+        ],
+        correct: 2,
+        explanation: "Mạn đà la Pháp Thân cúng dường chân tánh tự nhiên, vô tạo tác của tâm."
+    },
+    {
+        level: "medium",
+        question: "40. Trong pháp Kusali (Chöd), 'Bữa Tiệc Trắng' dành cúng dường cho ai?",
+        options: [
+            "Thượng khách (Tam Bảo, Bổn Sư, Hộ Pháp) và Khách dưới thấp (chúng sinh, chủ nợ nghiệp)",
+            "Chỉ ma quỷ",
+            "Chỉ bản thân",
+            "Người hầu"
+        ],
+        correct: 0,
+        explanation: "Biến thân xác thành cam lồ trắng cúng dường Thượng khách và bố thí cho Khách dưới thấp."
+    },
+    {
+        level: "medium",
+        question: "41. Bốn ma vương (Tứ Ma) trong pháp Kusali/Chöd gồm Ma uẩn, Ma phiền não, Ma Tử Vương và ma nào?",
+        options: ["Ma tham lam", "Ma con trời (Lha'i bu yi bdud / Ma ngã mạn)", "Ma sợ hãi", "Ma cõi âm"],
+        correct: 1,
+        explanation: "Bốn ma vương gồm: Ma uẩn, Ma phiền não, Tử ma và Ma con trời (phóng dật/ngã mạn)."
+    },
+    {
+        level: "medium",
+        question: "42. Chi thứ hai trong Thất Chi Phổ Hiền của Bổn Sư Du Già là gì?",
+        options: ["Lễ lạy", "Cúng dường", "Sám hối", "Tùy hỷ"],
+        correct: 1,
+        explanation: "Thất chi gồm: Lễ lạy, Cúng dường, Sám hối, Tùy hỷ, Thỉnh chuyển pháp hoàn, Thỉnh trụ thế, Hồi hướng."
+    },
+    {
+        level: "medium",
+        question: "43. Chi thứ bốn 'Tùy Hỷ' (Hoan hỷ) trong Thất Chi dùng đối trị tính xấu nào?",
+        options: ["Lòng tham", "Tính ganh tị (ghen tị)", "Sự giận dữ", "Sự ngu đần"],
+        correct: 1,
+        explanation: "Tùy hỷ hoan hỷ là pháp đối trị tính ganh tị trước công đức người khác."
+    },
+    {
+        level: "medium",
+        question: "44. Hồi hướng công đức cho sự Giác Ngộ chúng sinh được ví như điều gì trong Kinh Sagaramati?",
+        options: [
+            "Ngọn đèn thắp sáng",
+            "Giọt nước rơi vào đại dương sẽ không bao giờ khô cạn",
+            "Hạt giống nảy mầm",
+            "Cây cầu bắc qua sông"
+        ],
+        correct: 1,
+        explanation: "Giọt nước hòa vào đại dương không khô cạn trừ khi đại dương khô cạn; công đức hồi hướng Giác ngộ cũng thế."
+    },
+    {
+        level: "medium",
+        question: "45. Cách chắp tay lễ lạy chuẩn trong Mật Thừa là:",
+        options: [
+            "Ép sát hai lòng bàn tay",
+            "Chụm lại hình búp sen he hé nở, chừa khoảng trống ở giữa",
+            "Chỉ chạm các ngón tay",
+            "Nắm chặt nắm đấm"
+        ],
+        correct: 1,
+        explanation: "Chắp tay như búp sen he hé nở, lòng bàn tay chừa khoảng trống tượng trưng Pháp Thân."
+    },
+    {
+        level: "medium",
+        question: "46. Bố thí Siêu Việt (Bố thí Ba-la-mật) gồm 3 loại nào?",
+        options: [
+            "Tài thí, Pháp thí, Vô úy thí",
+            "Tiền bạc, Quần áo, Thức ăn",
+            "Thân, Khẩu, Ý",
+            "Trời, Người, Phật"
+        ],
+        correct: 0,
+        explanation: "Ba loại bố thí gồm: Tài thí, Pháp thí và Vô úy thí."
+    },
+    {
+        level: "medium",
+        question: "47. Thả tự do cho động vật sắp bị giết thuộc loại bố thí nào?",
+        options: ["Tài thí", "Pháp thí", "Vô úy thí", "Đại bố thí"],
+        correct: 2,
+        explanation: "Cứu mạng sống và che chở chúng sinh khỏi nỗi sợ chết thuộc Vô Úy Thí."
+    },
+    {
+        level: "medium",
+        question: "48. Trì Giới Siêu Việt bao gồm 3 khía cạnh: Tránh việc ác, Quyết làm việc thiện và...",
+        options: ["Ăn chay trường", "Đem lại lợi lạc cho người khác", "Tụng kinh hàng ngày", "Ở ẩn trong hang"],
+        correct: 1,
+        explanation: "Trì giới gồm: Tránh hành động bất thiện, Quyết làm việc thiện và Đem lại lợi lạc cho người khác."
+    },
+    {
+        level: "medium",
+        question: "49. Nhẫn Nại Siêu Việt bao gồm: Nhẫn nại khi gặp bất công, Nhẫn nại chịu gian khổ vì Đạo Pháp và...",
+        options: [
+            "Nhẫn nại khi bị đánh",
+            "Nhẫn nại đối mặt với chân lý sâu xa (Tánh Không) với tâm vô úy",
+            "Nhẫn nại nhịn ăn",
+            "Nhẫn nại với kẻ thù"
+        ],
+        correct: 1,
+        explanation: "Loại thứ ba là nhẫn nại đối mặt với chân lý sâu xa của Tánh Không với tâm vô úy."
+    },
+    {
+        level: "medium",
+        question: "50. Điều kiện tiên quyết quan trọng cho Thiền Định Siêu Việt là gì?",
+        options: [
+            "Ăn thật no",
+            "Từ bỏ sự phóng dật xao lãng và sống ở nơi cô tịch",
+            "Tập thể thao",
+            "Có đông đệ tử"
+        ],
+        correct: 1,
+        explanation: "Phải từ bỏ phóng dật, các mối bận tâm xao lãng và an trú nơi cô tịch."
+    },
+    {
+        level: "medium",
+        question: "51. Quá trình tịnh hóa của Kim Cang Tát Đỏa dựa trên Tứ Lực. Lực nào thể hiện cam kết không tái phạm?",
+        options: ["Lực hỗ trợ", "Lực ân hận", "Lực quyết chí chuyển tâm", "Lực hành thiện hạnh"],
+        correct: 2,
+        explanation: "Lực quyết chí chuyển tâm là cam kết lập thệ nguyện từ nay không tái phạm ác hạnh."
+    },
+    {
+        level: "medium",
+        question: "52. Nếu quá nghèo không có hạt lúa mạch hay đá quý, hành giả có thể dùng vật liệu nào cúng Mạn-đà-la?",
+        options: [
+            "Đất, cát, sỏi, đá cội đã làm sạch",
+            "Rác rưởi",
+            "Thực phẩm ôi thiu",
+            "Không được làm"
+        ],
+        correct: 0,
+        explanation: "Có thể dùng cát, sỏi, đá cội sạch làm sự hỗ trợ quán tưởng cúng dường Mạn-đà-la."
+    },
+    {
+        level: "medium",
+        question: "53. Thái độ cúng dường nào bị chỉ trích là làm cạn kiệt công đức?",
+        options: [
+            "Giữ phần tốt nhất cho mình, cúng đồ mốc/ôi thiu cho Tam Bảo",
+            "Cúng dường hết tài sản",
+            "Cúng hoa tươi",
+            "Cúng dường với tâm hoan hỷ"
+        ],
+        correct: 0,
+        explanation: "Giữ phần hảo hạng cho mình, cúng thực phẩm hư ôi cho Tam Bảo làm cạn kiệt công đức."
+    },
+    {
+        level: "medium",
+        question: "54. Phương pháp 'Hoán đổi mình và người' (Tonglen) khi hít vào - thở ra được thực hiện thế nào?",
+        options: [
+            "Thở ra nhận khổ - Hít vào trao hạnh phúc",
+            "Thở ra trao tất cả hạnh phúc/công đức - Hít vào nhận lấy toàn bộ khổ đau của chúng sinh",
+            "Chỉ hít thở sâu",
+            "Nín thở tập trung"
+        ],
+        correct: 1,
+        explanation: "Tonglen: Thở ra cho đi hạnh phúc/công đức; Hít vào gánh lấy mọi đau khổ chúng sinh."
+    },
+    {
+        level: "medium",
+        question: "55. Theo Ngài Atisa, 'Trí tuệ tuyệt vời nhất' trong thực hành là gì?",
+        options: [
+            "Thuộc lòng kinh sách",
+            "Hoàn toàn không coi bất kỳ điều gì có sự hiện hữu thực sự (thấu suốt Tánh Không)",
+            "Tranh luận thắng",
+            "Biết trước tương lai"
+        ],
+        correct: 1,
+        explanation: "Trí tuệ tuyệt vời nhất là hoàn toàn không coi bất kỳ điều gì có tự tính/hiện hữu thực."
+    },
+    {
+        level: "medium",
+        question: "56. Yếu tố quan trọng nhất quyết định một hành vi là Thiện hay Bất Thiện là gì?",
+        options: ["Hình thức bên ngoài", "Kích thước việc làm", "Động cơ thúc đẩy (tác ý) phía sau", "Số tiền chi ra"],
+        correct: 2,
+        explanation: "Động cơ thúc đẩy (tác ý) là yếu tố quyết định bản chất thiện hay bất thiện của hành vi."
+    },
+    {
+        level: "medium",
+        question: "57. Trường hợp Thuyền Trưởng Đại Bi Tâm sát sinh mà vẫn tạo công đức vĩ đại là do nguyên nhân nào?",
+        options: [
+            "Do muốn trả thù",
+            "Do động cơ hoàn toàn từ bi: giết 1 tên sát thủ để cứu 500 thương nhân và cứu chính tên đó khỏi địa ngục",
+            "Do có sức mạnh",
+            "Do vô tình"
+        ],
+        correct: 1,
+        explanation: "Động cơ hoàn toàn từ bi cứu 500 thương nhân và giải thoát tên sát thủ khỏi đọa địa ngục A Tì."
+    },
+    {
+        level: "medium",
+        question: "58. Geshe Ben Gungyal nhặt hòn đá trắng/đen phản ánh việc gì?",
+        options: [
+            "Chơi trò chơi",
+            "Quán sát tâm: Đặt đá đen khi khởi niệm xấu, đá trắng khi khởi niệm tốt để tịnh hóa tâm",
+            "Đếm số đệ tử",
+            "Xây nhà"
+        ],
+        correct: 1,
+        explanation: "Geshe Ben dùng đá đen/trắng để liên tục kiểm soát và tịnh hóa niệm tưởng của tâm."
+    },
+    {
+        level: "medium",
+        question: "59. Sám hối mà không có sự 'Ân hận' được ví như điều gì trong giáo huấn Karma Chagme?",
+        options: [
+            "Uống nước lã",
+            "Uống thuốc độc mà không biết",
+            "Uống thuốc chữa bệnh nhưng giữ lại độc tố (không thể tịnh hóa được)",
+            "Đổ nước vào bình thủng"
+        ],
+        correct: 2,
+        explanation: "Sám hối mà không hối hận thì như độc tố tiềm tàng, không thể tịnh hóa được."
+    },
+    {
+        level: "medium",
+        question: "60. Thuật ngữ 'Samaya' trong Mật Thừa được dịch sang tiếng Việt là gì?",
+        options: ["Giới Luật", "Mật Nguyện / Lời Thệ Nguyện Bí Mật", "Thiền Định", "Quán Đảnh"],
+        correct: 1,
+        explanation: "Samaya dịch là Mật nguyện hoặc thệ nguyện bí mật của Kim Cang Thừa."
+    },
+    {
+        level: "medium",
+        question: "61. Hạt lúa/gạo đã dùng trong cúng dường Mạn-đà-la nên xử lý thế nào?",
+        options: [
+            "Nấu ăn cho bản thân",
+            "Đem cho chim muông, phân phát cho người nghèo, hoặc xếp trước tượng Tam Bảo",
+            "Đổ vào rác",
+            "Bán lấy tiền"
+        ],
+        correct: 1,
+        explanation: "Phân phát cho chim muông, người nghèo hoặc cúng trước Tam Bảo, không dùng làm của riêng."
+    },
+    {
+        level: "medium",
+        question: "62. Vị Bổn Sư được quán tưởng ngồi vị trí nào của hành giả trong Bổn Sư Du Già?",
+        options: ["Trước mặt", "Sau lưng", "Trên đỉnh đầu hành giả", "Trong tim"],
+        correct: 2,
+        explanation: "Trong Bổn Sư Du Già, Thầy được quán tưởng ngự trên đĩa mặt trời/mặt trăng ở đỉnh đầu."
+    },
+    {
+        level: "medium",
+        question: "63. Trong Tứ Vô Lượng Tâm, 'Tâm Hỷ' được minh họa bằng hình ảnh ẩn dụ nào?",
+        options: [
+            "Bữa tiệc của vị hiền nhân",
+            "Con lạc đà mẹ tìm thấy đứa con thất lạc",
+            "Vị vua cứu dân",
+            "Mẹ yêu con một"
+        ],
+        correct: 1,
+        explanation: "Tâm Hỷ minh họa bằng niềm vui vô hạn của lạc đà mẹ tìm thấy con thất lạc."
+    },
+    {
+        level: "medium",
+        question: "64. 'Hồi hướng độc hại' là loại hồi hướng như thế nào?",
+        options: [
+            "Hồi hướng cầu hại người khác",
+            "Hồi hướng bị bám chấp vào 3 niệm đối đãi (người cho, vật cho, người nhận)",
+            "Không đọc bài nguyện",
+            "Hồi hướng cho người chết"
+        ],
+        correct: 1,
+        explanation: "Hồi hướng bị bám chấp vào 3 khái niệm tạo tác (chủ thể, đối tượng, hành động) bị coi là bẩn/độc."
+    },
+    {
+        level: "medium",
+        question: "65. Điều gì xảy ra nếu thực hành các giai đoạn cao mà bỏ rơi các Pháp Tu Dự Bị (Sơ Bộ)?",
+        options: [
+            "Vẫn đạt kết quả nhanh",
+            "Cắt đứt gốc rễ rốt ráo, tu tập giống như xây tòa nhà không có nền móng",
+            "Không sao cả",
+            "Thành Phật ngay"
+        ],
+        correct: 1,
+        explanation: "Bỏ các pháp dự bị là cắt đứt gốc rễ, như xây nhà không nền móng."
+    },
+    {
+        level: "medium",
+        question: "66. Ba phẩm hạnh cần thiết của đệ tử Đại Thừa khi theo chân vị Thầy tâm linh là gì?",
+        options: [
+            "Giàu có, Thông minh, Khỏe mạnh",
+            "Niềm tin kiên định, Lòng tôn kính, Sự cẩn mật/chánh niệm",
+            "Liều lĩnh, Kiêu ngạo, Nhanh nhạy",
+            "Cúng tiền, Nấu ăn, Hát"
+        ],
+        correct: 1,
+        explanation: "Đệ tử cần có niềm tin, sự tôn kính sâu sắc và chánh niệm/cẩn mật."
+    },
+    {
+        level: "medium",
+        question: "67. Từ 'VAJRASATTVA' trong bài Bách Tự Minh Chuỗi nghĩa là gì?",
+        options: ["Đại Bi Tâm", "Kim Cang Dũng Chí / Kim Cang Hữu Tình", "Trí Tuệ Mật", "Bổn Sư"],
+        correct: 1,
+        explanation: "Vajrasattva dịch nghĩa là Kim Cang Dũng Chí hoặc Kim Cang Hữu Tình."
+    },
+    {
+        level: "medium",
+        question: "68. Pháp tu Bổn Sư Du Già (Guru Yoga) kết thúc bằng giai đoạn quan trọng nào?",
+        options: [
+            "Thầy biến thành ánh sáng hòa tan vào tâm hành giả, an trú trong trạng thái vô niệm",
+            "Đứng dậy đi về",
+            "Cúng tiền",
+            "Tranh luận"
+        ],
+        correct: 0,
+        explanation: "Bổn Sư tan thành ánh sáng hòa nhập vào hành giả, tâm Thầy và tâm trò trở nên bất khả phân."
+    },
+    {
+        level: "medium",
+        question: "69. Phát khởi Bồ Đề Tâm vô chướng ngại đạt được ở cấp độ nào?",
+        options: ["Địa Phật Quả", "Cấp độ Sơ Địa", "Cấp độ người mới bắt đầu", "Cõi Trời"],
+        correct: 0,
+        explanation: "Phát khởi Bồ Đề Tâm hoàn toàn vô chướng ngại đạt được tại địa Phật Quả."
+    },
+    {
+        level: "medium",
+        question: "70. Mục đích cuối cùng của Patrul Rinpoche khi trao truyền 'Lời Vàng Của Thầy Tôi' là gì?",
+        options: [
+            "Khoe sự uyên bác",
+            "Giúp người đọc kiểm tra tâm mình, xua tan phiền não và đạt tới Giác Ngộ Rốt Ráo",
+            "Bán sách",
+            "Thu đệ tử"
+        ],
+        correct: 1,
+        explanation: "Giúp người đọc dùng giáo lý làm tấm gương kiểm tra tâm, loại bỏ lỗi lầm và tiến bước giải thoát."
+    },
+
+    // 71 - 100: NÂNG CAO & KHÓ (Phân tích chuyên sâu, Mật thừa)
+    {
+        level: "hard",
+        question: "71. Trong nghi thức Kusali, hình ảnh Bổn Tôn cắt đỉnh đầu hành giả làm bình bát biểu tượng cho:",
+        options: [
+            "Cắt đứt sự bám chấp vào bản ngã (vô ngã)",
+            "Sự giận dữ",
+            "Sự trừng phạt",
+            "Mất trí nhớ"
+        ],
+        correct: 0,
+        explanation: "Hành động cắt vòm sọ làm bình bát cúng dường đại diện cho việc cắt đứt bám chấp bản ngã."
+    },
+    {
+        level: "hard",
+        question: "72. Chữ Phạn 'P'ET!' xướng lên trong thực hành Chö / Kusali có tác dụng chính là gì?",
+        options: [
+            "Làm khiếp sợ kẻ thù",
+            "Cắt đứt ngay lập tức tâm phân biệt vọng tưởng và sự bám chấp xác thân",
+            "Bắt đầu bài hát",
+            "Gọi đệ tử"
+        ],
+        correct: 1,
+        explanation: "Âm P'et! dùng để cắt đứt tức khắc tâm phân biệt và sự bám chấp xác thân."
+    },
+    {
+        level: "hard",
+        question: "73. Theo Machik Labdron, Chö Tuyệt Đối (Chö tối thượng) là gì?",
+        options: [
+            "Lang thang ở nghĩa địa",
+            "Cắt đứt gốc rễ của sự chấp ngã một lần và mãi mãi",
+            "Cắt thịt cho thú ăn",
+            "Đánh trống thật to"
+        ],
+        correct: 1,
+        explanation: "Chö tối thượng là cắt đứt tận gốc rễ sự tin tưởng/bám chấp vào bản ngã."
+    },
+    {
+        level: "hard",
+        question: "74. Khi quán tưởng ánh sáng phóng ra từ 3 chữ OM, AH, HUM trên thân Bổn Sư thấm nhập hành giả trao truyền bao nhiêu quán đảnh?",
+        options: ["1 quán đảnh", "Bốn quán đảnh", "Không có quán đảnh", "Tài bảo quán đảnh"],
+        correct: 1,
+        explanation: "Lần lượt nhận 4 quán đảnh tịnh hóa ô nhiễm Thân, Khẩu, Ý và Mạch/Khí/Tinh túy."
+    },
+    {
+        level: "hard",
+        question: "75. Ánh sáng Trắng từ chữ OM ở trán Bổn Sư thấm nhập vào trán hành giả tịnh hóa chướng ngại nào?",
+        options: ["Chướng ngại của Khẩu", "Chướng ngại của Thân (Sát sinh, trộm cắp, tà dâm)", "Chướng ngại của Ý", "Chướng ngại của Tham"],
+        correct: 1,
+        explanation: "Ánh sáng trắng từ trán tịnh hóa 3 ác hạnh thuộc về Thân."
+    },
+    {
+        level: "hard",
+        question: "76. Ánh sáng Đỏ từ chữ AH ở cổ họng Bổn Sư thấm nhập vào cổ họng hành giả tịnh hóa chướng ngại nào?",
+        options: ["Chướng ngại của Thân", "Chướng ngại của Khẩu (Nói dối, gieo bất hòa, lời cay nghiệt, nói phiếm)", "Chướng ngại của Ý", "Bệnh tật"],
+        correct: 1,
+        explanation: "Ánh sáng đỏ từ cổ họng tịnh hóa các chướng ngại thuộc về Khẩu (Ngữ)."
+    },
+    {
+        level: "hard",
+        question: "77. Ánh sáng Xanh Dương từ chữ HUM ở tim Bổn Sư thấm nhập vào tim hành giả tịnh hóa chướng ngại nào?",
+        options: ["Chướng ngại của Thân", "Chướng ngại của Khẩu", "Chướng ngại của Ý (Tham lam, hại người, tà kiến)", "Chướng ngại thể chất"],
+        correct: 2,
+        explanation: "Ánh sáng xanh từ tim tịnh hóa các chướng ngại thuộc về Ý."
+    },
+    {
+        level: "hard",
+        question: "78. Tinh túy cốt tủy của toàn bộ con đường Bồ Tát Đạo được đúc kết ngắn gọn là gì?",
+        options: [
+            "Tánh Không mà cốt tủy đích thực chính là Lòng Từ Bi",
+            "Chỉ cần lễ lạy",
+            "Tránh xa mọi người",
+            "Tích lũy tài sản"
+        ],
+        correct: 0,
+        explanation: "Toàn bộ con đường đúc kết lại là 'Tánh Không mà cốt tủy chính là Lòng Từ Bi'."
+    },
+    {
+        level: "hard",
+        question: "79. Drom Tönpa hỏi Ngài Atisa: 'Thành tựu tốt đẹp nhất là gì?', Atisa trả lời thế nào?",
+        options: [
+            "Có nhiều chùa phiền",
+            "Các cảm xúc tiêu cực (phiền não) từ từ giảm thiểu",
+            "Bay lên không trung",
+            "Được xưng tụng"
+        ],
+        correct: 1,
+        explanation: "Atisa đáp: Thành tựu tốt đẹp nhất là các cảm xúc tiêu cực từ từ giảm thiểu."
+    },
+    {
+        level: "hard",
+        question: "80. Dấu hiệu chắc chắn nhất cho thấy các trải nghiệm thiền định là THẬT chứ không phải chướng ma là gì?",
+        options: [
+            "Lòng từ và bi của Bồ Đề Tâm liên tục tăng trưởng vững chắc",
+            "Cảm thấy giỏi hơn người khác",
+            "Được cúng nhiều tiền",
+            "Thấy ánh sáng sáng hơn"
+        ],
+        correct: 0,
+        explanation: "Dấu hiệu đích thực là lòng Từ Bi và Bồ Đề Tâm ngày càng tăng trưởng."
+    },
+    {
+        level: "hard",
+        question: "81. Ngài Chegom định nghĩa 'Hành vi đúng đắn dành cho người có căn cơ cao nhất' là gì?",
+        options: ["Giữ mắt cẩn thận", "Hành động như giấc mơ", "Hoàn toàn không hành động (vô hành / không tạo tác)", "Tụng kinh suốt đêm"],
+        correct: 2,
+        explanation: "Căn cơ cao nhất: Vô hành (không tạo tác, không vọng tưởng)."
+    },
+    {
+        level: "hard",
+        question: "82. Mật nguyện 'Sự vi phạm qua giao tiếp' (sự vi phạm ngẫu nhiên) xảy ra khi nào?",
+        options: [
+            "Khi tự phá giới",
+            "Khi tiếp xúc, trò chuyện hoặc uống chung nước với người đã phá mật nguyện gốc",
+            "Khi quên tụng chú",
+            "Khi đi du lịch"
+        ],
+        correct: 1,
+        explanation: "Xảy ra khi giao tiếp, uống chung nước hay ở chung thung lũng với người vỡ mật nguyện gốc."
+    },
+    {
+        level: "hard",
+        question: "83. Tám Tỉ Dụ Về Ảo Giác trong Trí Tuệ Nhờ Thiền Định bao gồm: Giấc mơ, Ảo thuật, Màn mưa và...",
+        options: [
+            "Hòn đá, Cái cây",
+            "Bóng gương, Thành phố càn thát bà, Trăng đáy nước, Bọt nước, Hình phản chiếu",
+            "Mặt trời, Mặt trăng",
+            "Ngọn lửa, Đất"
+        ],
+        correct: 1,
+        explanation: "Gồm các ví dụ ảo ảnh: giấc mơ, ảo thuật, bóng gương, trăng đáy nước, bọt nước..."
+    },
+    {
+        level: "hard",
+        question: "84. Trong Ẩn dụ chiếc cối xay bằng gỗ, vị Thầy tâm linh nào cần phải tránh?",
+        options: [
+            "Thầy sống trong giếng",
+            "Thầy thiếu phẩm hạnh học hỏi/thiền định, dạy đệ tử vì lý do thế tục/bảo vệ giai cấp",
+            "Thầy mù",
+            "Thầy giận dữ"
+        ],
+        correct: 1,
+        explanation: "Vị thầy như cối xay gỗ thiếu phẩm hạnh từ thiền định, dạy đệ tử vì danh lợi thế tục."
+    },
+    {
+        level: "hard",
+        question: "85. Ẩn dụ 'Ếch ngồi đáy giếng' miêu tả loại Thầy tâm linh nào?",
+        options: [
+            "Thầy sống dưới nước",
+            "Thầy không có phẩm hạnh đặc biệt, kiêu ngạo vì lợi dưỡng/danh tiếng, không biết phẩm tính chân thật",
+            "Thầy nghèo khổ",
+            "Thầy khiêm tốn"
+        ],
+        correct: 1,
+        explanation: "Vị thầy như ếch đáy giếng kiêu ngạo vì chút danh lợi nhỏ mà không biết sự vĩ đại thật sự."
+    },
+    {
+        level: "hard",
+        question: "86. 'Những người hướng dẫn mù quáng' là các vị Thầy có đặc điểm gì?",
+        options: [
+            "Bị hỏng mắt thật",
+            "Phẩm hạnh không hơn đệ tử, thiếu Bồ Đề Tâm, bị thu hút bởi danh vọng",
+            "Không biết đọc chữ",
+            "Sống trong hang tối"
+        ],
+        correct: 1,
+        explanation: "Thầy mù quáng là người phẩm hạnh không hơn đệ tử, thiếu lòng từ bi Bồ Đề Tâm."
+    },
+    {
+        level: "hard",
+        question: "87. Phát hiện lỗi lầm nơi vị Thầy tâm linh chân chính, đệ tử nên xử lý tâm trí như thế nào?",
+        options: [
+            "Chỉ trích Thầy công khai",
+            "Xấu hổ và nhận ra đó là do cái thấy bất tịnh của chính tâm mình",
+            "Bỏ đi ngay",
+            "Tranh luận với Thầy"
+        ],
+        correct: 1,
+        explanation: "Đệ tử phải xấu hổ nhận ra cái thấy của tâm mình còn bất tịnh, Thầy vốn không vết tì."
+    },
+    {
+        level: "hard",
+        question: "88. Thái độ kính Thầy tinh thần 'như chiếc đe thợ rèn' có nghĩa là:",
+        options: [
+            "Đứng yên",
+            "Chịu đựng nóng, lạnh và mọi nỗi gian khổ trong phụng sự",
+            "Cứng đơ không cảm xúc",
+            "Đánh đập người khác"
+        ],
+        correct: 1,
+        explanation: "Như chiếc đe thợ rèn: Chịu đựng nóng, lạnh và mọi gian khổ để phụng sự."
+    },
+    {
+        level: "hard",
+        question: "89. Phản ứng đúng đắn đối với những người chỉ trích hoặc thù ghét Bổn Sư của mình là gì?",
+        options: [
+            "Đánh nhau với họ",
+            "Tránh nói chuyện cởi mở/thân mật với họ (nếu không thể chuyển hóa tâm họ)",
+            "Kết bạn thân hơn",
+            "Nói xấu lại họ"
+        ],
+        correct: 1,
+        explanation: "Nên tránh trò chuyện thân mật vì ảnh hưởng xấu làm hại mật nguyện cá nhân."
+    },
+    {
+        level: "hard",
+        question: "90. Ngài Jigme Lingpa nhận được hệ thống 'Longchen Nyingthig' (Tâm Yếu) qua phương thức nào?",
+        options: ["Đọc sách cổ", "Khai mở kho tàng tâm linh (Mật Tạng / Terma)", "Học từ Ấn Độ", "Tự sáng tác"],
+        correct: 1,
+        explanation: "Jigme Lingpa khai mở kho tàng Tâm Yếu (Heart-Essence Terma) từ Đức Longchenpa."
+    },
+    {
+        level: "hard",
+        question: "91. Trong đoạn Kết Luận, Patrul Rinpoche khuyên đệ tử coi giáo huấn phơi bày lỗi lầm như cái gì?",
+        options: ["Cửa sổ soi lỗi người khác", "Tấm gương để tự khảo sát và chỉnh sửa chính mình", "Vũ khí tranh luận", "Thước đo thầy"],
+        correct: 1,
+        explanation: "Coi giáo huấn phơi bày lỗi lầm là 'tấm gương để khảo sát chính bản thân bạn'."
+    },
+    {
+        level: "hard",
+        question: "92. Trong Mạn-đà-la Phi Thường của Báo Thân, phẩm vật cúng dường chính bao gồm:",
+        options: ["Lúa mạch và hạt cát", "Cung điện trong 5 cõi Phật vĩ đại cùng các Thiên Nữ Tuyệt Mỹ", "Thân xác hành giả", "Cây cối"],
+        correct: 1,
+        explanation: "Mạn đà la Báo thân cúng dường vô vàn cõi Trời, cung điện trong 5 cõi Phật và niềm vui cảm thọ."
+    },
+    {
+        level: "hard",
+        question: "93. Bữa Tiệc Đa Dạng trong pháp Kusali/Chöd dùng phẩm vật cúng dường biến hóa thành gì?",
+        options: ["Các vật phẩm thế gian đa dạng", "Lửa đỏ", "Băng giá", "Cát bụi"],
+        correct: 0,
+        explanation: "Bữa tiệc đa dạng biến thân xác thành tất cả những gì khách cúng dường khao khát."
+    },
+    {
+        level: "hard",
+        question: "94. Khi lỡ vi phạm mật nguyện nhỏ, phương pháp khắc phục hàng ngày tốt nhất là gì?",
+        options: [
+            "Tự trừng phạt thân thể",
+            "Trì tụng Bách Tự Minh / Quán tưởng Kim Cang Tát Đỏa và tự nhận bốn quán đảnh",
+            "Bỏ tu tập",
+            "Cúng tiền"
+        ],
+        correct: 1,
+        explanation: "Thực hành thiền quán Kim Cang Tát Đỏa và tự thọ nhận 4 quán đảnh hàng ngày giúp hàn gắn."
+    },
+    {
+        level: "hard",
+        question: "95. 'Nền tảng của mọi con đường' là tên gọi dành cho chương nào trong Phần Hai?",
+        options: ["Khơi dậy Bồ Đề Tâm", "Quy Y", "Kim Cang Tát Đỏa", "Mạn Đà La"],
+        correct: 1,
+        explanation: "Chương 1 có tên gọi 'Quy Y, nền tảng của mọi con đường'."
+    },
+    {
+        level: "hard",
+        question: "96. Pháp tu Quy Y mở ra cánh cửa dẫn vào điều gì?",
+        options: ["Cõi Trời", "Chánh Pháp của Phật Giáo", "Sự giàu có", "Danh vọng"],
+        correct: 1,
+        explanation: "Quy Y mở ra cánh cửa dẫn vào Chánh Pháp và làm cơ sở cho mọi thực hành tiếp theo."
+    },
+    {
+        level: "hard",
+        question: "97. Mối nguy hiểm của việc biểu diễn 'cúng dường đỏ' (máu thịt) mà thiếu thực chứng hai giai đoạn là gì?",
+        options: ["Tốn tiền", "Thu hút tinh linh ác độc tụ hội thụ hưởng gây hậu quả xấu", "Bị cười", "Không sao"],
+        correct: 1,
+        explanation: "Bổn Tôn không thụ hưởng, chỉ có tà ma ác độc tụ hội thụ hưởng gây hậu quả xấu."
+    },
+    {
+        level: "hard",
+        question: "98. 'Sự dũng cảm của vị Bồ Tát' nguyện giải thoát chúng sinh đồng thời cùng bản thân gọi là gì?",
+        options: ["Sự dũng cảm của Vua", "Sự dũng cảm của Người Thuyền Chài (Thuyền Trưởng)", "Sự dũng cảm của Người Chăn Cừu", "Sự dũng cảm của Chiến Sĩ"],
+        correct: 1,
+        explanation: "Người thuyền chài chèo thuyền đưa cả mình và hành khách cập bờ giải thoát cùng lúc."
+    },
+    {
+        level: "hard",
+        question: "99. 'Tứ Lực' trong tịnh hóa nghiệp Kim Cang Tát Đỏa là phương pháp gì?",
+        options: ["Phương pháp đối trị nghiệp chướng", "Phương pháp tích lũy tài bảo", "Pháp tu chuyển di", "Nghi thức cầu siêu"],
+        correct: 0,
+        explanation: "Tứ lực tịnh hóa là 4 phương pháp đối trị hoàn hảo giúp tịnh hóa mọi nghiệp chướng."
+    },
+    {
+        level: "hard",
+        question: "100. Thông điệp cốt tủy xuyên suốt toàn bộ Phần Hai dành cho người thực hành là gì?",
+        options: [
+            "Học thuộc chữ nghĩa",
+            "Soi giáo lý vào tâm mình, tịnh hóa nghiệp chướng, phát lòng từ bi và hành trì kiên định",
+            "Cầu xin phép thuật",
+            "Tìm kiếm danh tiếng thế gian"
+        ],
+        correct: 1,
+        explanation: "Soi giáo lý làm tấm gương tự kiểm tra tâm, loại bỏ lỗi lầm, phát Bồ Đề Tâm và kiên trì hành trì."
+    }
+];
+
+
+// Biến trạng thái toàn cục & LocalStorage
+const STORAGE_KEY = 'quiz_loi_vang_p2_state';
+let currentQuestion = 0;
+let score = 0;
+let userAnswers = new Array(quizData.length).fill(null);
+let savedStateTemp = null;
+let showResult = false;
+let isReviewMode = false;
+let timerInterval = null;
+let timeLeft = 20;
+let isExplanationRevealed = false;
+
+function saveState() {
+    try {
+        const state = {
+            currentQuestion,
+            score,
+            userAnswers,
+            showResult,
+            isReviewMode
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } catch (e) {
+        console.error("Lỗi khi lưu trạng thái vào LocalStorage:", e);
+    }
+}
+
+function updateScore() {
+    score = userAnswers.reduce((acc, ans, idx) => {
+        return (ans !== null && ans === quizData[idx].correct) ? acc + 1 : acc;
+    }, 0);
+}
+
+function renderResultScreen() {
+    const app = document.querySelector('.app-container');
+    if (!app) return;
+    
+    const percentage = (score / quizData.length) * 100;
+    
+    let title = "";
+    let message = "";
+    
+    if (percentage >= 90) {
+        title = "Bậc Thượng Căn";
+        message = "Trí tuệ thấu suốt sâu sắc. Bạn đã nắm vững cốt lõi giáo lý một cách phi thường.";
+    } else if (percentage >= 70) {
+        title = "Bậc Trung Căn";
+        message = "Hiểu biết sâu rộng giáo lý. Bạn có nền tảng học pháp rất tốt.";
+    } else if (percentage >= 50) {
+        title = "Bậc Hạ Căn";
+        message = "Nền tảng khá vững chắc. Hãy tiếp tục tinh tấn tu học thêm.";
+    } else {
+        title = "Người Mới Bắt Đầu";
+        message = "Cần tiếp tục đọc và quán chiếu sâu hơn. Đừng nản lòng, con đường học pháp luôn rộng mở.";
+    }
+    
+    const dashoffset = 502.65 - (502.65 * percentage) / 100;
+    
+    app.innerHTML = `
+        <div class="question-card result-screen">
+            <h1 class="result-title">Kết Quả Tu Học</h1>
+            <div class="chart-container">
+                <svg class="donut-chart" viewBox="0 0 200 200">
+                    <circle class="donut-bg" cx="100" cy="100" r="80"></circle>
+                    <circle class="donut-progress" cx="100" cy="100" r="80" style="stroke-dashoffset: 502.65;"></circle>
+                </svg>
+                <div class="chart-text">${score} / ${quizData.length}</div>
+            </div>
+            <div class="result-badge">${title}</div>
+            <div class="result-message">${message}</div>
+            <div class="result-actions">
+                <button class="btn btn-secondary" onclick="startReviewMode()">Xem lại đáp án</button>
+                <button class="btn btn-primary" onclick="restartQuiz()">Làm lại từ đầu</button>
+            </div>
+        </div>
+    `;
+    
+    setTimeout(() => {
+        const progressCircle = document.querySelector('.donut-progress');
+        if (progressCircle) {
+            progressCircle.style.strokeDashoffset = dashoffset;
+        }
+    }, 100);
+}
+
+function finishQuiz() {
+    showResult = true;
+    isReviewMode = false;
+    saveState();
+    renderQuestion();
+}
+
+function startReviewMode() {
+    showResult = false;
+    isReviewMode = true;
+    currentQuestion = 0;
+    saveState();
+    renderQuestion();
+}
+
+function exitReviewMode() {
+    showResult = true;
+    isReviewMode = false;
+    saveState();
+    renderQuestion();
+}
+
+function playBellSound() {
+    try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+        
+        gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 2.0);
+        
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        
+        osc.start();
+        osc.stop(audioCtx.currentTime + 2.0);
+    } catch (e) {
+        console.error("Lỗi âm thanh Web Audio:", e);
+    }
+}
+
+function updateTimerUI(seconds) {
+    const bar = document.getElementById('timer-bar');
+    const text = document.getElementById('timer-text');
+    if (text) text.innerText = `${seconds}s`;
+    if (bar) {
+        const percentage = (seconds / 20) * 100;
+        bar.style.width = `${percentage}%`;
+        if (seconds <= 5) {
+            bar.style.background = '#a61c1c';
+        } else {
+            bar.style.background = 'linear-gradient(90deg, var(--gold-accent), var(--incorrect))';
+        }
+    }
+}
+
+function startTimer() {
+    clearInterval(timerInterval);
+    if (isReviewMode || showResult) {
+        return;
+    }
+    
+    const currentAns = userAnswers[currentQuestion];
+    if (currentAns !== null) {
+        updateTimerUI(0);
+        return;
+    }
+    
+    timeLeft = 20;
+    updateTimerUI(timeLeft);
+    
+    timerInterval = setInterval(() => {
+        timeLeft--;
+        updateTimerUI(timeLeft);
+        
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            handleTimeout();
+        }
+    }, 1000);
+}
+
+function handleTimeout() {
+    isExplanationRevealed = false;
+    userAnswers[currentQuestion] = -1;
+    updateScore();
+    saveState();
+    playBellSound();
+    renderQuestion();
+}
+
+function revealExplanation() {
+    isExplanationRevealed = true;
+    renderQuestion();
+}
+
+function restartQuiz() {
+    clearInterval(timerInterval);
+    localStorage.removeItem(STORAGE_KEY);
+    currentQuestion = 0;
+    score = 0;
+    userAnswers = new Array(quizData.length).fill(null);
+    showResult = false;
+    isReviewMode = false;
+    isExplanationRevealed = false;
+    renderQuestion();
+}
+
+function renderQuestion() {
+    if (showResult) {
+        renderResultScreen();
+        return;
+    }
+
+    const app = document.querySelector('.app-container');
+    if (!app) return;
+
+    const q = quizData[currentQuestion];
+    if (!q) return;
+
+    const selectedOption = userAnswers[currentQuestion];
+    const isTimeout = selectedOption === -1;
+    const isAnswered = (selectedOption !== null && selectedOption !== -1) || (isTimeout && isExplanationRevealed) || isReviewMode;
+    const isDisabled = isAnswered || isTimeout;
+
+    const optionsHtml = q.options.map((opt, idx) => {
+        let btnClass = "option-btn";
+        if (isAnswered) {
+            if (idx === q.correct) {
+                btnClass += " correct";
+            } else if (selectedOption !== null && idx === selectedOption) {
+                btnClass += " incorrect";
+            }
+        }
+        return `<button class="${btnClass}" onclick="selectOption(${idx})" ${isDisabled ? 'disabled' : ''}>${String.fromCharCode(65 + idx)}. ${opt}</button>`;
+    }).join('');
+
+    let explanationHtml = '';
+    if (isAnswered && q.explanation) {
+        explanationHtml = `<div class="explanation"><strong>Giải thích:</strong> ${q.explanation}</div>`;
+    }
+
+    let reviewBannerHtml = '';
+    if (isReviewMode) {
+        reviewBannerHtml = `
+            <div class="review-banner">
+                <span>Đang ở chế độ ôn tập.</span>
+                <button onclick="exitReviewMode()">Thoát Ôn Tập</button>
+            </div>
+        `;
+    }
+
+    const isLastQuestion = currentQuestion === quizData.length - 1;
+    let nextBtnHtml = '';
+    if (isLastQuestion) {
+        nextBtnHtml = `<button class="nav-btn" onclick="finishQuiz()">Xem Kết Quả</button>`;
+    } else {
+        nextBtnHtml = `<button class="nav-btn" onclick="nextQuestion()">Câu tiếp</button>`;
+    }
+
+    let timerDisplayHtml = '';
+    if (!isReviewMode) {
+        timerDisplayHtml = `
+            <div class="timer-display">
+                <span>⏳</span>
+                <span id="timer-text">20s</span>
+            </div>
+        `;
+    }
+
+    let timeoutOverlayHtml = '';
+    if (isTimeout && !isExplanationRevealed) {
+        timeoutOverlayHtml = `
+            <div class="timeout-overlay">
+                <div class="timeout-title">⏳ HẾT THỜI GIAN SUY NGHĨ</div>
+                <button class="btn btn-primary" onclick="revealExplanation()">Kết quả</button>
+            </div>
+        `;
+    }
+
+    app.innerHTML = `
+        ${reviewBannerHtml}
+        <div class="header">
+            <h1>Quiz Tương Tác 100 Câu: Lời Vàng Của Thầy Tôi - Phần Hai</h1>
+            <div class="progress-bar">
+                <span>Câu ${currentQuestion + 1} / ${quizData.length}</span>
+                ${timerDisplayHtml}
+                <button class="map-toggle-btn" onclick="openQuizMap()">🗺️ Bản đồ câu hỏi</button>
+                <span>Điểm: ${score}</span>
+            </div>
+            ${!isReviewMode ? `
+            <div class="timer-container">
+                <div class="timer-bar" id="timer-bar"></div>
+            </div>
+            ` : ''}
+        </div>
+        <div class="question-card">
+            <div class="level-badge level-${q.level}">${q.level ? q.level.toUpperCase() : ''}</div>
+            <h2 class="question-title">${q.question}</h2>
+            <div class="options-container">
+                ${timeoutOverlayHtml}
+                <div class="options-list">
+                    ${optionsHtml}
+                </div>
+            </div>
+            ${explanationHtml}
+        </div>
+        <div class="navigation">
+            <button class="nav-btn" onclick="prevQuestion()" ${currentQuestion === 0 ? 'disabled' : ''}>Câu trước</button>
+            ${nextBtnHtml}
+        </div>
+    `;
+
+    startTimer();
+}
+
+function selectOption(index) {
+    if (isReviewMode || userAnswers[currentQuestion] !== null) return;
+    clearInterval(timerInterval);
+    userAnswers[currentQuestion] = index;
+    updateScore();
+    saveState();
+    renderQuestion();
+}
+
+function nextQuestion() {
+    if (currentQuestion < quizData.length - 1) {
+        isExplanationRevealed = false;
+        currentQuestion++;
+        saveState();
+        renderQuestion();
+    }
+}
+
+function prevQuestion() {
+    if (currentQuestion > 0) {
+        isExplanationRevealed = false;
+        currentQuestion--;
+        saveState();
+        renderQuestion();
+    }
+}
+
+function confirmResume(shouldResume) {
+    const modal = document.getElementById('resume-modal');
+    if (modal) modal.style.display = 'none';
+
+    clearInterval(timerInterval);
+    isExplanationRevealed = false;
+
+    if (shouldResume && savedStateTemp) {
+        currentQuestion = typeof savedStateTemp.currentQuestion === 'number' ? savedStateTemp.currentQuestion : 0;
+        userAnswers = Array.isArray(savedStateTemp.userAnswers) ? savedStateTemp.userAnswers : new Array(quizData.length).fill(null);
+        showResult = !!savedStateTemp.showResult;
+        isReviewMode = !!savedStateTemp.isReviewMode;
+        updateScore();
+    } else {
+        localStorage.removeItem(STORAGE_KEY);
+        currentQuestion = 0;
+        score = 0;
+        userAnswers = new Array(quizData.length).fill(null);
+        showResult = false;
+        isReviewMode = false;
+    }
+    savedStateTemp = null;
+    renderQuestion();
+}
+
+function openQuizMap() {
+    const modal = document.getElementById('quiz-map-modal');
+    const grid = document.getElementById('quiz-map-grid');
+    if (!modal || !grid) return;
+
+    grid.innerHTML = quizData.map((_, idx) => {
+        let statusClass = 'unanswered';
+        const ans = userAnswers[idx];
+        if (ans !== null) {
+            statusClass = (ans === quizData[idx].correct) ? 'correct' : 'incorrect';
+        }
+        if (idx === currentQuestion) {
+            statusClass += ' current';
+        }
+        return `<button class="grid-item ${statusClass}" onclick="jumpToQuestion(${idx})">${idx + 1}</button>`;
+    }).join('');
+
+    modal.style.display = 'flex';
+}
+
+function closeQuizMap() {
+    const modal = document.getElementById('quiz-map-modal');
+    if (modal) modal.style.display = 'none';
+}
+
+function closeQuizMapOnBackdrop(event) {
+    if (event.target.id === 'quiz-map-modal') {
+        closeQuizMap();
+    }
+}
+
+function jumpToQuestion(index) {
+    if (index >= 0 && index < quizData.length) {
+        isExplanationRevealed = false;
+        currentQuestion = index;
+        saveState();
+        closeQuizMap();
+        renderQuestion();
+    }
+}
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        closeQuizMap();
+    }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    renderQuestion();
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+        try {
+            const parsed = JSON.parse(saved);
+            if (parsed && Array.isArray(parsed.userAnswers) && parsed.userAnswers.length === quizData.length) {
+                const hasProgress = parsed.userAnswers.some(ans => ans !== null) || (parsed.currentQuestion > 0);
+                if (hasProgress) {
+                    savedStateTemp = parsed;
+                    const modal = document.getElementById('resume-modal');
+                    if (modal) {
+                        modal.style.display = 'flex';
+                    }
+                }
+            }
+        } catch (e) {
+            console.error("Lỗi đọc LocalStorage:", e);
+            localStorage.removeItem(STORAGE_KEY);
+        }
+    }
+});
+    </script>
+</body>
+</html>
