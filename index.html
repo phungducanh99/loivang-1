@@ -2004,6 +2004,10 @@ const quizData = [
     }
 ];
 
+// Biến trạng thái toàn cục & LocalStorage
+const STORAGE_KEY = 'quiz_loi_vang_p2_state';
+let currentQuestion = 0;
+let score = 0;
 let userAnswers = new Array(quizData.length).fill(null);
 let savedStateTemp = null;
 let showResult = false;
