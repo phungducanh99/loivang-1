@@ -2015,6 +2015,7 @@ let isReviewMode = false;
 let timerInterval = null;
 let timeLeft = 20;
 let isExplanationRevealed = false;
+let audioCtx = null;
 
 function saveState() {
     try {
@@ -2111,28 +2112,50 @@ function exitReviewMode() {
     renderQuestion();
 }
 
+function initAudioContext() {
+    if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+    }
+    return audioCtx;
+}
+
+function unlockAudio() {
+    const ctx = initAudioContext();
+    if (ctx && ctx.state === 'running') {
+        document.removeEventListener('click', unlockAudio);
+        document.removeEventListener('touchstart', unlockAudio);
+    }
+}
+document.addEventListener('click', unlockAudio);
+document.addEventListener('touchstart', unlockAudio);
+
 function playTickSound(timeLeft) {
     try {
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        const osc = audioCtx.createOscillator();
-        const gainNode = audioCtx.createGain();
+        const ctx = initAudioContext();
+        if (!ctx) return;
+        
+        const osc = ctx.createOscillator();
+        const gainNode = ctx.createGain();
         
         osc.connect(gainNode);
-        gainNode.connect(audioCtx.destination);
+        gainNode.connect(ctx.destination);
         
         // Tiếng tích (giây chẵn) tần số 1600Hz, tiếng tắc (giây lẻ) tần số 1200Hz
         const freq = (timeLeft % 2 === 0) ? 1600 : 1200;
         osc.type = 'triangle';
-        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        osc.frequency.setValueAtTime(freq, ctx.currentTime);
         
         // Âm lượng tăng dần từ 0.02 (giây 20) lên 0.2 (giây 1)
         const volume = 0.02 + 0.18 * ((20 - timeLeft) / 19);
         
-        gainNode.gain.setValueAtTime(volume, audioCtx.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.05);
+        gainNode.gain.setValueAtTime(volume, ctx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.05);
         
         osc.start();
-        osc.stop(audioCtx.currentTime + 0.05);
+        osc.stop(ctx.currentTime + 0.05);
     } catch (e) {
         console.error("Lỗi phát tiếng tích tắc:", e);
     }
@@ -2140,34 +2163,35 @@ function playTickSound(timeLeft) {
 
 function playMultipleBells() {
     try {
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const ctx = initAudioContext();
+        if (!ctx) return;
         
         // Tiếng chuông 1 (giây 0)
-        playSingleBell(audioCtx, 880, 0, 0.4, 1.5);
+        playSingleBell(ctx, 880, 0, 0.4, 1.5);
         // Tiếng chuông 2 (giây 0.3)
-        playSingleBell(audioCtx, 880, 0.3, 0.4, 1.5);
+        playSingleBell(ctx, 880, 0.3, 0.4, 1.5);
         // Tiếng chuông 3 (giây 0.6) - ngân dài và to
-        playSingleBell(audioCtx, 1046.5, 0.6, 0.6, 2.5);
+        playSingleBell(ctx, 1046.5, 0.6, 0.6, 2.5);
     } catch (e) {
         console.error("Lỗi phát chuỗi chuông:", e);
     }
 }
 
-function playSingleBell(audioCtx, freq, delay, volume, duration) {
-    const osc = audioCtx.createOscillator();
-    const gainNode = audioCtx.createGain();
+function playSingleBell(ctx, freq, delay, volume, duration) {
+    const osc = ctx.createOscillator();
+    const gainNode = ctx.createGain();
     
     osc.type = 'sine';
-    osc.frequency.setValueAtTime(freq, audioCtx.currentTime + delay);
+    osc.frequency.setValueAtTime(freq, ctx.currentTime + delay);
     
-    gainNode.gain.setValueAtTime(0.00001, audioCtx.currentTime + delay);
-    gainNode.gain.linearRampToValueAtTime(volume, audioCtx.currentTime + delay + 0.05);
-    gainNode.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + delay + duration);
+    gainNode.gain.setValueAtTime(0.00001, ctx.currentTime + delay);
+    gainNode.gain.linearRampToValueAtTime(volume, ctx.currentTime + delay + 0.05);
+    gainNode.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + delay + duration);
     
     osc.connect(gainNode);
-    gainNode.connect(audioCtx.destination);
+    gainNode.connect(ctx.destination);
     
-    osc.start(audioCtx.currentTime + delay);
+    osc.start(ctx.currentTime + delay);
     osc.stop(audioCtx.currentTime + delay + duration);
 }
 
