@@ -26,12 +26,13 @@
             margin: 0;
             padding: 0;
             font-family: var(--font-body);
-            background: var(--bg-gradient);
+            background: linear-gradient(rgba(13, 4, 4, 0.45), rgba(28, 12, 12, 0.45)), url('assets/background.jpg') center/cover no-repeat fixed;
             color: var(--text-main);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
+            transition: background 0.4s ease, color 0.4s ease;
         }
 
         .app-container {
@@ -763,9 +764,253 @@
                 grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
             }
         }
+
+        /* Theme toggle button styling */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 1000;
+            font-size: 1.2rem;
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--gold-accent);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+            transform: scale(1.08);
+        }
+
+        /* Light theme overrides */
+        body.light-theme {
+            background: linear-gradient(rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.88)), url('assets/background.jpg') center/cover no-repeat fixed;
+            color: #2b251a;
+            --card-bg: rgba(255, 251, 243, 0.85);
+            --border-color: rgba(184, 134, 11, 0.3);
+            --gold-accent: #996515;
+            --text-main: #2b251a;
+            --text-sub: #6e6557;
+            --correct: #1b5e20;
+            --incorrect: #b71c1c;
+        }
+
+        body.light-theme .theme-toggle {
+            background: rgba(255, 255, 255, 0.7);
+            border-color: var(--border-color);
+            color: var(--text-main);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        body.light-theme .theme-toggle:hover {
+            border-color: var(--gold-accent);
+            box-shadow: 0 0 15px rgba(153, 101, 21, 0.3);
+        }
+
+        body.light-theme .option-btn {
+            background: rgba(255, 255, 255, 0.6);
+            color: #2b251a;
+        }
+
+        body.light-theme .option-btn:hover:not(:disabled) {
+            background: rgba(153, 101, 21, 0.1);
+            border-color: var(--gold-accent);
+            box-shadow: 0 0 15px rgba(153, 101, 21, 0.2);
+        }
+
+        body.light-theme .option-btn.correct {
+            background: rgba(27, 94, 32, 0.2);
+            border-color: var(--correct);
+            box-shadow: 0 0 15px rgba(27, 94, 32, 0.2);
+            color: #1b5e20;
+            font-weight: 600;
+        }
+
+        body.light-theme .option-btn.incorrect {
+            background: rgba(183, 28, 28, 0.2);
+            border-color: var(--incorrect);
+            box-shadow: 0 0 15px rgba(183, 28, 28, 0.2);
+            color: #b71c1c;
+            font-weight: 600;
+        }
+
+        body.light-theme .explanation {
+            background: rgba(255, 255, 255, 0.6);
+            color: var(--text-main);
+            border-left-color: var(--gold-accent);
+        }
+
+        body.light-theme .modal-content {
+            background: rgba(255, 251, 243, 0.98);
+            color: var(--text-main);
+            border-color: var(--gold-accent);
+            box-shadow: 0 0 35px rgba(153, 101, 21, 0.25);
+        }
+
+        body.light-theme .modal-btn-primary {
+            background: var(--gold-accent);
+            color: #ffffff;
+            border-color: var(--gold-accent);
+        }
+
+        body.light-theme .modal-btn-primary:hover {
+            background: #b37a22;
+            box-shadow: 0 0 15px rgba(153, 101, 21, 0.4);
+        }
+
+        body.light-theme .modal-btn-secondary {
+            background: rgba(0, 0, 0, 0.03);
+            color: var(--text-sub);
+            border-color: var(--border-color);
+        }
+
+        body.light-theme .modal-btn-secondary:hover {
+            background: rgba(0, 0, 0, 0.08);
+            color: var(--text-main);
+        }
+
+        body.light-theme .nav-btn {
+            background: rgba(255, 255, 255, 0.6);
+            color: #2b251a;
+        }
+
+        body.light-theme .nav-btn:hover:not(:disabled) {
+            background: rgba(153, 101, 21, 0.1);
+            border-color: var(--gold-accent);
+            box-shadow: 0 0 15px rgba(153, 101, 21, 0.2);
+            color: var(--gold-accent);
+        }
+
+        body.light-theme .review-banner {
+            background: rgba(153, 101, 21, 0.1);
+            border-color: var(--gold-accent);
+            color: #2b251a;
+        }
+
+        body.light-theme .review-banner button {
+            background: var(--gold-accent);
+            color: #ffffff;
+        }
+
+        body.light-theme .review-banner button:hover {
+            background: #b37a22;
+        }
+
+        body.light-theme .timeout-overlay {
+            background: rgba(255, 240, 240, 0.9);
+            box-shadow: 0 0 25px rgba(183, 28, 28, 0.15);
+            border-color: var(--incorrect);
+        }
+
+        body.light-theme .timeout-title {
+            text-shadow: 0 0 8px rgba(183, 28, 28, 0.3);
+        }
+
+        body.light-theme .timer-container {
+            background: rgba(0, 0, 0, 0.05);
+            border-color: rgba(153, 101, 21, 0.15);
+        }
+
+        body.light-theme .timer-display {
+            text-shadow: 0 0 5px rgba(153, 101, 21, 0.2);
+        }
+
+        body.light-theme .level-easy {
+            background: rgba(27, 94, 32, 0.08);
+            border-color: rgba(27, 94, 32, 0.25);
+            color: #1b5e20;
+        }
+
+        body.light-theme .level-medium {
+            background: rgba(230, 81, 0, 0.08);
+            border-color: rgba(230, 81, 0, 0.25);
+            color: #e65100;
+        }
+
+        body.light-theme .level-hard {
+            background: rgba(183, 28, 28, 0.08);
+            border-color: rgba(183, 28, 28, 0.25);
+            color: #b71c1c;
+        }
+
+        body.light-theme .quiz-map-legend {
+            background: rgba(0, 0, 0, 0.03);
+            color: var(--text-sub);
+        }
+
+        body.light-theme .dot.unanswered {
+            background: rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(0, 0, 0, 0.15);
+        }
+
+        body.light-theme .grid-item.unanswered {
+            background: rgba(0, 0, 0, 0.03);
+            color: var(--text-sub);
+            border-color: rgba(0, 0, 0, 0.08);
+        }
+
+        body.light-theme .grid-item.unanswered:hover {
+            background: rgba(153, 101, 21, 0.1);
+            border-color: var(--gold-accent);
+            color: var(--text-main);
+        }
+
+        body.light-theme .grid-item.correct {
+            background: rgba(27, 94, 32, 0.1);
+            color: #1b5e20;
+            border-color: rgba(27, 94, 32, 0.3);
+            box-shadow: 0 0 8px rgba(27, 94, 32, 0.1);
+        }
+
+        body.light-theme .grid-item.correct:hover {
+            background: rgba(27, 94, 32, 0.2);
+        }
+
+        body.light-theme .grid-item.incorrect {
+            background: rgba(183, 28, 28, 0.1);
+            color: #b71c1c;
+            border-color: rgba(183, 28, 28, 0.3);
+            box-shadow: 0 0 8px rgba(183, 28, 28, 0.1);
+        }
+
+        body.light-theme .grid-item.incorrect:hover {
+            background: rgba(183, 28, 28, 0.2);
+        }
+
+        body.light-theme .close-btn {
+            color: var(--text-sub);
+        }
+
+        body.light-theme .close-btn:hover {
+            color: var(--gold-accent);
+        }
+
+        body.light-theme .donut-bg {
+            stroke: rgba(0, 0, 0, 0.06);
+        }
+
+        body.light-theme .header h1,
+        body.light-theme .result-title {
+            text-shadow: 0 1px 2px rgba(255,255,255,0.8);
+        }
     </style>
 </head>
 <body>
+    <!-- Theme Toggle Button -->
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">☀️</button>
+
     <div class="app-container">
         <!-- Cấu trúc HTML chính -->
     </div>
@@ -801,6 +1046,11 @@
         </div>
     </div>
     <script>
+        // Check theme immediately to prevent FOUT
+        if (localStorage.getItem('theme') === 'light') {
+            document.body.classList.add('light-theme');
+        }
+
 const quizData = [
     {
             "level": "medium",
@@ -2472,7 +2722,25 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
+function toggleTheme() {
+    const isLight = document.body.classList.toggle('light-theme');
+    localStorage.setItem('theme', isLight ? 'light' : 'dark');
+    updateThemeToggleUI();
+}
+
+function updateThemeToggleUI() {
+    const btn = document.querySelector('.theme-toggle');
+    if (!btn) return;
+    if (document.body.classList.contains('light-theme')) {
+        btn.textContent = '🌙';
+    } else {
+        btn.textContent = '☀️';
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+    // Initial UI check for theme toggle icon
+    updateThemeToggleUI();
     renderQuestion();
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
