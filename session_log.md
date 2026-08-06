@@ -56,3 +56,27 @@
 
 ## 4. Các bước Tiếp theo (Next Steps)
 * Bàn giao mã nguồn hoàn chỉnh của dự án `loivang-1` cho người dùng.
+
+---
+
+# Session Log: 2026-08-06
+
+## 1. Kết quả Công việc (Work Accomplished)
+* **Tích hợp hình nền tùy chỉnh**:
+  - Lưu hình nền phong cách Phật giáo/mạn-đà-la do người dùng cung cấp vào dự án dưới tên [assets/background.jpg](file:///Users/phungducanh/.gemini/antigravity/scratch/loivang-1/assets/background.jpg).
+  - Cấu hình body background sử dụng hình nền này kết hợp với lớp phủ gradient tối (`rgba(13, 4, 4, 0.45)` đến `rgba(28, 12, 12, 0.45)`) để đảm bảo độ tương phản cao cho chữ.
+* **Hỗ trợ chế độ Sáng/Tối (Light/Dark Mode)**:
+  - Thiết kế nút chuyển đổi giao diện (theme toggle) hình tròn nổi (floating button) cố định ở góc trên bên phải màn hình.
+  - Xây dựng giao diện Light Mode tinh tế bằng cách làm mờ/làm sáng hình nền (phủ lớp màu trắng đục `rgba(255, 255, 255, 0.88)` lên hình nền để giữ hoa văn mạn-đà-la chìm) và chuyển đổi các tông màu tối sang tông màu kem sáng, chữ tối.
+  - Lưu trạng thái lựa chọn giao diện vào `localStorage` để tự động khôi phục khi tải lại trang, đi kèm hiệu ứng chuyển cảnh mượt mà (`transition: 0.4s ease`).
+* **Kiểm thử & Đồng bộ**:
+  - Đảm bảo 100% cú pháp JavaScript không lỗi.
+  - Commit và push code lên GitHub.
+
+## 2. Kiến trúc & Trạng thái Kỹ thuật (Technical State)
+* **Theme System**: Quản lý bằng lớp `light-theme` trên `<body>` và ghi đè các biến CSS để thay đổi diện mạo tức thì.
+* **Assets**: [assets/background.jpg](file:///Users/phungducanh/.gemini/antigravity/scratch/loivang-1/assets/background.jpg).
+
+## 3. Bài học Rút ra (Lessons Learned)
+* **Khai thác hình nền tối cho Light Mode**: Để giữ nguyên các hoa văn tinh xảo của hình nền tối trong Light Mode mà không cần chuẩn bị thêm hình nền thứ hai, phương pháp xếp chồng một dải màu trắng đục bán trong suốt (ví dụ: `linear-gradient(rgba(255,255,255,0.88), rgba(255,255,255,0.88))`) lên trước ảnh nền trong thuộc tính `background` mang lại kết quả hiển thị nền sáng vân mờ cực kỳ sang trọng và tiết kiệm tài nguyên.
+
