@@ -1005,6 +1005,54 @@
         body.light-theme .result-title {
             text-shadow: 0 1px 2px rgba(255,255,255,0.8);
         }
+
+        /* Styles for questions with long text (e.g. from 101 onwards) to fit one screen */
+        .question-card.long-text {
+            padding: 24px 30px;
+        }
+        .question-card.long-text .question-title {
+            font-size: 1.3rem;
+            margin-top: 5px;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+        .question-card.long-text .options-list {
+            gap: 10px;
+        }
+        .question-card.long-text .option-btn {
+            padding: 10px 18px;
+            font-size: 0.95rem;
+            border-radius: 8px;
+        }
+        .question-card.long-text .explanation {
+            margin-top: 15px;
+            padding: 12px 20px;
+            font-size: 0.95rem;
+            border-radius: 0 8px 8px 0;
+        }
+        .question-card.long-text .timeout-overlay {
+            border-radius: 8px;
+        }
+
+        /* Responsive override for long-text question card on smaller screens */
+        @media (max-width: 600px) {
+            .question-card.long-text {
+                padding: 18px 15px;
+            }
+            .question-card.long-text .question-title {
+                font-size: 1.15rem;
+                margin-bottom: 12px;
+            }
+            .question-card.long-text .option-btn {
+                padding: 8px 12px;
+                font-size: 0.85rem;
+            }
+            .question-card.long-text .explanation {
+                margin-top: 10px;
+                padding: 8px 12px;
+                font-size: 0.85rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -2745,12 +2793,17 @@ function playSingleBell(ctx, freq, delay, volume, duration) {
     osc.stop(audioCtx.currentTime + delay + duration);
 }
 
+function getQuestionTimeLimit() {
+    return currentQuestion >= 100 ? 40 : 20;
+}
+
 function updateTimerUI(seconds) {
     const bar = document.getElementById('timer-bar');
     const text = document.getElementById('timer-text');
     if (text) text.innerText = `${seconds}s`;
     if (bar) {
-        const percentage = (seconds / 20) * 100;
+        const limit = getQuestionTimeLimit();
+        const percentage = (seconds / limit) * 100;
         bar.style.width = `${percentage}%`;
         if (seconds <= 5) {
             bar.style.background = '#a61c1c';
@@ -2772,7 +2825,7 @@ function startTimer() {
         return;
     }
     
-    timeLeft = 20;
+    timeLeft = getQuestionTimeLimit();
     updateTimerUI(timeLeft);
     playTickSound(timeLeft);
     
@@ -2872,7 +2925,7 @@ function renderQuestion() {
         timerDisplayHtml = `
             <div class="timer-display">
                 <span>⏳</span>
-                <span id="timer-text">20s</span>
+                <span id="timer-text">${currentQuestion >= 100 ? '40s' : '20s'}</span>
             </div>
         `;
     }
@@ -2903,7 +2956,7 @@ function renderQuestion() {
             </div>
             ` : ''}
         </div>
-        <div class="question-card">
+        <div class="question-card ${currentQuestion >= 100 ? 'long-text' : ''}">
             <div class="level-badge level-${q.level}">${q.level ? q.level.toUpperCase() : ''}</div>
             <h2 class="question-title">${q.question}</h2>
             <div class="options-container">
