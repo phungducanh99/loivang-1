@@ -88,10 +88,11 @@
 * **Bổ sung 25 câu hỏi tích hợp sâu**:
   - Ghép thêm 25 câu hỏi trắc nghiệm phức hợp nâng cao (số thứ tự từ 101 đến 125) vào cuối mảng dữ liệu `quizData`.
   - Tự động hóa việc phân tích đáp án (A/B/C/D thành 0/1/2/3) và gán mức độ `"hard"`.
-* **Tối ưu hóa bố cục hiển thị trang đơn (Fit Viewport)**:
-  - Thiết kế riêng lớp CSS `.long-text` cho thẻ chứa câu hỏi từ câu 101 trở đi.
-  - Giảm kích thước font chữ tiêu đề (`1.3rem`), thu nhỏ padding (`24px 30px`), khoảng cách và padding của các nút lựa chọn để đảm bảo nội dung câu hỏi rất dài vẫn hiển thị gọn gàng trên cùng 1 trang màn hình mà không cần cuộn (chống tràn viewport).
-  - Hỗ trợ responsive cho màn hình di động nhỏ để hiển thị tối ưu.
+* **Tối ưu hóa bố cục hiển thị trang đơn (Fit Viewport) & Tăng tính dễ đọc**:
+  - Thiết kế lớp CSS `.long-text` cho câu 101 trở đi kết hợp kích hoạt class `.long-question` lên `body` để tự động mở rộng chiều ngang của khung `.app-container` từ `800px` lên `960px` (có transition co giãn mượt mà).
+  - Tăng line-height của tiêu đề câu hỏi lên `1.6`, tăng nhẹ font-size của tiêu đề (`1.35rem`) và các nút đáp án (`1rem`, line-height `1.5`), bổ sung giãn chữ `letter-spacing: 0.3px` giúp văn bản dài trở nên cực kỳ thoáng đãng, dễ đọc.
+  - Tinh chỉnh padding vừa phải (`28px 36px` cho card, `12px 20px` cho nút) và gap giữa các đáp án là `12px` giúp nội dung dàn đều theo chiều ngang mà vẫn nằm gọn gàng trên 1 màn hình.
+  - Hỗ trợ responsive cho màn hình di động nhỏ để co giãn linh hoạt 100% chiều ngang.
 * **Mở rộng thời gian suy nghĩ cho các câu hỏi nâng cao**:
   - Điều chỉnh thời gian đếm ngược lên **40 giây** (thay vì 20 giây mặc định) cho tất cả các câu hỏi từ 101 trở đi.
   - Tự động thay đổi phần trăm thanh thời gian chạy và nhãn hiển thị tương thích theo mức giới hạn động.
