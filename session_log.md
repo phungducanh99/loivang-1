@@ -80,3 +80,24 @@
 ## 3. Bài học Rút ra (Lessons Learned)
 * **Khai thác hình nền tối cho Light Mode**: Để giữ nguyên các hoa văn tinh xảo của hình nền tối trong Light Mode mà không cần chuẩn bị thêm hình nền thứ hai, phương pháp xếp chồng một dải màu trắng đục bán trong suốt (ví dụ: `linear-gradient(rgba(255,255,255,0.88), rgba(255,255,255,0.88))`) lên trước ảnh nền trong thuộc tính `background` mang lại kết quả hiển thị nền sáng vân mờ cực kỳ sang trọng và tiết kiệm tài nguyên.
 
+---
+
+# Session Log: 2026-08-07
+
+## 1. Kết quả Công việc (Work Accomplished)
+* **Bổ sung 25 câu hỏi tích hợp sâu**:
+  - Ghép thêm 25 câu hỏi trắc nghiệm phức hợp nâng cao (số thứ tự từ 101 đến 125) vào cuối mảng dữ liệu `quizData`.
+  - Tự động hóa việc phân tích đáp án (A/B/C/D thành 0/1/2/3) và gán mức độ `"hard"`.
+* **Tối ưu hóa bố cục hiển thị trang đơn (Fit Viewport)**:
+  - Thiết kế riêng lớp CSS `.long-text` cho thẻ chứa câu hỏi từ câu 101 trở đi.
+  - Giảm kích thước font chữ tiêu đề (`1.3rem`), thu nhỏ padding (`24px 30px`), khoảng cách và padding của các nút lựa chọn để đảm bảo nội dung câu hỏi rất dài vẫn hiển thị gọn gàng trên cùng 1 trang màn hình mà không cần cuộn (chống tràn viewport).
+  - Hỗ trợ responsive cho màn hình di động nhỏ để hiển thị tối ưu.
+* **Mở rộng thời gian suy nghĩ cho các câu hỏi nâng cao**:
+  - Điều chỉnh thời gian đếm ngược lên **40 giây** (thay vì 20 giây mặc định) cho tất cả các câu hỏi từ 101 trở đi.
+  - Tự động thay đổi phần trăm thanh thời gian chạy và nhãn hiển thị tương thích theo mức giới hạn động.
+
+## 2. Kiến trúc & Trạng thái Kỹ thuật (Technical State)
+* **Question Database**: Tổng cộng 125 câu hỏi trắc nghiệm Phật Pháp hoàn chỉnh.
+* **Timer Logic**: Hệ thống đếm ngược động thông qua hàm `getQuestionTimeLimit()`.
+
+
